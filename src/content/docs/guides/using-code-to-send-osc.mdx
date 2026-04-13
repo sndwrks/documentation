@@ -1,0 +1,284 @@
+---
+title: Using Code to Send OSC
+description: A guide on programmatically using the server.
+---
+
+import { Icon, Steps } from '@astrojs/starlight/components';
+
+This guide will walk you through some examples on how to use python or javascript to send OSC. We at sndwrks obviously like code a bit and we wanted to share some simple examples.
+
+By then end of the guide, you'll have two working scripts in python and node.js that will allow you to send osc via the terminal anywhere you want. We find scripts like this extremely helpful for testing devices when we don't want to use a full tool like QLab or ETC EOS.
+
+
+**Example: Make Confetti with Python**
+```python title="confetti.py"
+# pip3 install python-osc
+from pythonosc import udp_client
+
+server_ip = "10.0.10.100" # adjust to the server ip
+server_udp_port = 52000 # adjust to the network server udp listen port
+
+client = udp_client.SimpleUDPClient(server_ip, server_udp_port)
+client.send_message("/sndwrks/server/v1/confetti", [])
+
+# run it in terminal
+# python3 confetti.py
+```
+
+## Setup
+<Icon name="open-book" />
+
+To complete this guide, you'll need `python 3.12` and `node.js 24`. If you already know how to set those up, skip ahead. These instructions are for macOS with Terminal.
+
+:::note
+There's lots of different ways to get node and python running. This is one way that keeps things tidy.
+:::
+
+### Install Python with pyenv
+<Icon name="open-book" />
+
+[pyenv](https://github.com/pyenv/pyenv) lets you install and switch between Python versions without touching the system Python.
+
+<Steps>
+1. Install pyenv with Homebrew:
+   ```bash
+   brew install pyenv
+   ```
+
+2. Add pyenv to your shell. Add these lines to `~/.zshrc`:
+   ```bash
+   export PYENV_ROOT="$HOME/.pyenv"
+   [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+   eval "$(pyenv init -)"
+   ```
+
+3. Restart your terminal, then install Python 3.12:
+   ```bash
+   pyenv install 3.12
+   pyenv global 3.12
+   ```
+
+4. Verify it worked:
+   ```bash
+   python --version
+   # Python 3.12.x
+   ```
+</Steps>
+
+### Install Node.js with nvm
+<Icon name="open-book" />
+
+[nvm](https://github.com/nvm-sh/nvm) does the same thing as pyenv but for Node.js.
+
+<Steps>
+1. Install nvm with Homebrew:
+   ```bash
+   brew install nvm
+   ```
+
+2. Add nvm to your shell. Add these lines to `~/.zshrc`:
+   ```bash
+   export NVM_DIR="$HOME/.nvm"
+   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+   ```
+
+3. Restart your terminal, then install Node 24:
+   ```bash
+   nvm install 24
+   nvm use 24
+   ```
+
+4. Verify it worked:
+   ```bash
+   node --version
+   # v24.x.x
+   ```
+</Steps>
+
+## Send with Python
+<Icon name="open-book" />
+
+This script lets you send any OSC message from the command line. You pass in the server IP, port, OSC address, and any arguments.
+
+First, install the `python-osc` library:
+```bash
+pip install python-osc
+```
+
+Then create this script:
+```python title="send_osc.py"
+# the sys package allows us to read values when the file is ran
+import sys
+# this is the library that will actually format and send our osc
+from pythonosc import udp_client
+
+# if the file is executed without the proper arguments we should
+# let the user know and show them how to fix it.
+if len(sys.argv) < 4:
+    print("Usage: python send_osc.py <ip> <port> <address> [args...]")
+    print("Example: python send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/confetti")
+    sys.exit(1)
+
+# read the arguments inputted at runtime
+ip = sys.argv[1]
+port = int(sys.argv[2])
+address = sys.argv[3]
+args = sys.argv[4:]
+
+# initialize the client
+client = udp_client.SimpleUDPClient(ip, port)
+
+# now send our message
+client.send_message(address, args)
+
+# and lets show some feedback that we did that for the user
+print(f"Sent {address} {' '.join(args)} -> {ip}:{port}")
+```
+
+**Usage**
+
+Send confetti with no args:
+```bash
+python send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/confetti
+```
+
+Log a custom event with args:
+```bash
+python send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/event/custom "Pyro fired" "Stage left mortar"
+```
+
+## Send with Node.js
+<Icon name="open-book" />
+
+Same idea, but in JavaScript using the [osc.js](https://github.com/colinbdclark/osc.js/) library.
+
+Set up a small project:
+```bash
+mkdir osc-sender && cd osc-sender
+npm init -y
+npm install osc
+```
+
+Then add `"type": "module"` to your `package.json` so you can use `import` syntax in `.js` files. It should look something like this:
+```json title="package.json" ins={3}
+{
+  "name": "osc-sender",
+  "type": "module",
+  "dependencies": {
+    "osc": "^2.4.5"
+  }
+}
+```
+
+Now create the script:
+```javascript title="sendOsc.js"
+// this is the library that will actually format and send our osc
+import osc from "osc";
+
+// process.argv contains the command line arguments
+// the first two are the node path and script path, so we skip them
+const args = process.argv.slice(2);
+
+// if the script is executed without the proper arguments we should
+// let the user know and show them how to fix it.
+if (args.length < 3) {
+  console.log("Usage: node sendOsc.js <ip> <port> <address> [args...]");
+  console.log("Example: node sendOsc.js 10.0.10.100 52000 /sndwrks/server/v1/confetti");
+  process.exit(1);
+}
+
+// read the arguments inputted at runtime
+const [ip, port, address, ...oscArgs] = args;
+
+// initialize a udp port pointed at our target server
+const udpPort = new osc.UDPPort({
+  localAddress: "0.0.0.0",
+  localPort: 0,
+  remoteAddress: ip,
+  remotePort: parseInt(port),
+});
+
+// once the port is ready, send our message and close it
+udpPort.on("ready", () => {
+  udpPort.send({
+    address: address,
+    args: oscArgs.map((a) => ({ type: "s", value: a })),
+  });
+
+  // and lets show some feedback that we did that for the user
+  console.log(`Sent ${address} ${oscArgs.join(" ")} -> ${ip}:${port}`);
+  udpPort.close();
+});
+
+// open the port which will trigger the "ready" event above
+udpPort.open();
+```
+
+**Usage**
+
+Send confetti with no args:
+```bash
+node sendOsc.js 10.0.10.100 52000 /sndwrks/server/v1/confetti
+```
+
+Broadcast a chat message:
+```bash
+node sendOsc.js 10.0.10.100 52000 /sndwrks/server/v1/chat/broadcast/send "Stage Manager" "Places please" "info"
+```
+
+## Practical Example
+<Icon name="open-book" />
+
+Let's put one of these scripts to use. Say you want the sndwrks server to know when a Mac on your network has finished booting. We can create a `.command` file that runs on login and sends an OSC message automatically.
+
+A `.command` file is just a bash script that macOS knows how to double-click and run in Terminal. More importantly, you can add it to your Login Items so it runs every time you log in.
+
+### Create the script
+
+Create a file called `startup-completed.command` wherever you like. We'll use the Desktop for this example:
+
+```bash title="~/Desktop/startup-completed.command"
+#!/bin/bash
+
+# wait a bit for the network to come up
+sleep 10
+
+# send a custom event to the sndwrks server
+python ~/scripts/send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/event/custom "Mac Online" "Booth Mac finished booting"
+```
+
+Adjust the IP, port, and message to match your setup. This assumes you saved `send_osc.py` to `~/scripts/` — update the path to wherever yours lives. You could use the Node.js script here too, just swap the command.
+
+### Make it executable
+
+macOS won't run it unless you mark it as executable:
+```bash
+chmod +x ~/Desktop/startup-completed.command
+```
+
+You can double-click it now to test. Terminal should open, wait 10 seconds, send the message, and close.
+
+### Add to Login Items
+
+<Steps>
+1. Open **System Settings** → **General** → **Login Items & Extensions**.
+2. Under **Open at Login**, click the **+** button.
+3. Navigate to your `startup-completed.command` file and add it. You can also just drag and drop your `.command` file into the startup items window if you want.
+</Steps>
+
+Now every time this Mac logs in, it will send that OSC message to your server. Handy for knowing when all your machines are up and ready before a show.
+
+:::tip
+If you don't want the Terminal window hanging around after the script runs, add the following as the last line of the script. It'll close itself after sending.
+:::
+
+```bash title="~/Desktop/startup-completed.command" ins={8}
+#!/bin/bash
+
+# wait a bit for the network to come up
+sleep 10
+
+# send a custom event to the sndwrks server
+python ~/scripts/send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/event/custom "Mac Online" "Booth Mac finished booting"
+osascript -e 'tell application "Terminal" to close front window' &
+```

@@ -1,0 +1,428 @@
+---
+title: OSC API V1
+description: The available osc commands for sndwrks local
+---
+
+import { Card, Steps, Icon, Aside } from '@astrojs/starlight/components';
+
+<Icon name="rocket" />
+
+This is where you'll find the documentation on what OSC messages you can send to the server to control it. From shutdown to confetti.
+
+We use [uuids](https://en.wikipedia.org/wiki/Universally_unique_identifier) to identify resources on the server. These are unique across our systems. They are a bit long, but it makes sure the commands are unique to your show.
+
+:::note
+**Where'd OSC come from?**
+
+[Open Sound Control Specification](https://opensoundcontrol.stanford.edu/spec-1_0.html)
+:::
+
+<Card title="How to use this reference">
+<Steps>
+1. Read the description about the command and its usage.
+2. See the Address and sometimes Args. We will put bits that you fill in like this: `<your-spicy-value>`. We also often provide ways to copy the properly formatted address right out of the website.
+3. There may be an example to show you how to use this in practice as well. Especially, if there's pieces you need to fill in.
+4. If it still isn't making sense, [join our discord](https://discord.gg/tjPd6Q9A) and let us know! You can also make your own adjustments to these docs via Github.
+</Steps>
+</Card>
+
+## Supported OSC Types
+<Icon name="rocket" />
+
+sndwrks local supports both UDP and TCP OSC. Our TCP OSC is [SLIP framed](https://en.wikipedia.org/wiki/Serial_Line_Internet_Protocol).
+
+
+## Global
+<Icon name="rocket" />
+
+These commands are not specific to any server feature or function like routing or devices. The control the server itself or operate globally.
+
+### Confetti
+<Icon name="rocket" />
+We admit it this one was for fun, but it can be practical too. It's useful to know that a control chain exists from and end device all the way to the browser with the server gui.
+
+Maybe snow will be next tied to your local weather?
+
+**Address**
+```
+/sndwrks/server/v1/confetti
+```
+
+### Ping
+<Icon name="rocket" />
+The ping message will automatically respond with a `/sndwrks/server/v1/pong` message. Arguments can be supplied to set the response port and address. This can be helpful if you want to maintain an active loop between two devices.
+
+**Address & Args**
+```
+/sndwrks/server/v1/ping <response-port> <response-address>
+```
+**Examples**
+
+This would start `server-pong` in Qlab. This could be a simple heartbeat, but don't forget to have a script to restart it if you panic! 
+
+```
+/sndwrks/server/v1/ping 53000 /cue/server-pong/start
+```
+
+<Aside type="tip" title="EOS Heatbeat Example" icon="heart">
+You could have a macro on EOS that is triggered by the pong response. Then, that parent macro could have a delay that fires a child macro. The child macro sends the ping back out. If you flash a dummy light on your magic sheet, you've created a heart beat. Now you know if you lose connection to the server.
+</Aside>
+
+### E-Stop Engage
+<Icon name="rocket" />
+This engages the e-stop if that wasn't clear. All routing, macros, and haze-watch functions will stop. Non-action oriented api commands will still work. Turning stuff on and off but not triggering a macro for example.
+
+**Address**
+```
+/sndwrks/server/v1/estop/engage
+```
+
+### E-Stop Disengage
+<Icon name="rocket" />
+This, well, disengages the e-stop. All control functions will resume immediately. 
+
+**Address**
+```
+/sndwrks/server/v1/estop/disengage
+```
+
+:::note
+You can set the startup state of the e-stop in `Settings -> System Settings -> E-Stop Enabled on Start`
+:::
+
+## Devices
+<Icon name="rocket" />
+These api functions control various parameters in the devices tab.
+
+### Sensor Shutdown
+<Icon name="rocket" />
+This turns all connected sensors off. Please do this before you power off the server.
+
+**Address**
+```
+/sndwrks/server/v1/device/sensor/shutdown
+```
+:::caution
+The sensors are little computers. They are really tolerant of losing power, and we understand things happen. That being said, any time you can safely shutdown a sensor we really appreciate it. 
+:::
+
+### Single Sensor Shutdown
+<Icon name="rocket" />
+
+Turns just one sensor off by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/device/sensor/<uuid>/shutdown
+```
+
+**Example**
+```
+/sndwrks/server/v1/device/sensor/019c53a3-e032-7b3b-88cd-02b2d361959a/shutdown
+```
+
+### Enable a Device
+<Icon name="rocket" />
+
+This enables one device. This can be used to re-enable routing or macro functions.
+
+**Address**
+```
+/sndwrks/server/v1/device/<uuid>/on
+```
+
+**Example**
+```
+/sndwrks/server/v1/device/019c53a3-e032-7b3b-88cd-02b2d361959a/on
+```
+
+### Disable a Device
+<Icon name="rocket" />
+
+This disables one device. This stops it from being used in any router functions or macros.
+
+**Address**
+```
+/sndwrks/server/v1/device/<uuid>/off
+```
+
+**Example**
+```
+/sndwrks/server/v1/device/019c53a3-e032-7b3b-88cd-02b2d361959a/off
+```
+
+## Router Crosspoints
+<Icon name="rocket" />
+These commands let you enable and disable individual crosspoints in the router. A crosspoint is the connection between a source and a destination.
+
+### Enable a Crosspoint
+<Icon name="rocket" />
+
+Turns a crosspoint on by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/router/crosspoint/<uuid>/on
+```
+
+**Example**
+```
+/sndwrks/server/v1/router/crosspoint/019c53a3-e032-7b3b-88cd-02b2d361959a/on
+```
+
+### Disable a Crosspoint
+<Icon name="rocket" />
+
+Turns a crosspoint off by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/router/crosspoint/<uuid>/off
+```
+
+**Example**
+```
+/sndwrks/server/v1/router/crosspoint/019c53a3-e032-7b3b-88cd-02b2d361959a/off
+```
+
+## Events
+<Icon name="rocket" />
+Event logging lets you mark moments in your show timeline. These are recorded in the event log and can be useful for post-show review or triggering other workflows.
+
+### Show Start
+<Icon name="rocket" />
+
+Logs a show start event.
+
+**Address**
+```
+/sndwrks/server/v1/event/show-start
+```
+
+### Show End
+<Icon name="rocket" />
+
+Logs a show end event.
+
+**Address**
+```
+/sndwrks/server/v1/event/show-end
+```
+
+### Show Break
+<Icon name="rocket" />
+
+Logs a show break event. Intermission, anyone?
+
+**Address**
+```
+/sndwrks/server/v1/event/show-break
+```
+
+### Custom Event
+<Icon name="rocket" />
+
+Logs a custom event with your own message and an optional detail string. If you don't provide a message it defaults to "Custom Event".
+
+**Address & Args**
+```
+/sndwrks/server/v1/event/custom <message> <detail>
+```
+
+**Example**
+```
+/sndwrks/server/v1/event/custom "Pyro fired" "Stage left mortar"
+```
+
+## Haze Watch Triggers
+<Icon name="rocket" />
+These commands control individual haze watch triggers. Triggers monitor sensor readings and fire actions when a level threshold is crossed.
+
+### Enable a Trigger
+<Icon name="rocket" />
+
+Enables a haze watch trigger by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/haze-watch/trigger/<uuid>/on
+```
+
+**Example**
+```
+/sndwrks/server/v1/haze-watch/trigger/019c53a3-e032-7b3b-88cd-02b2d361959a/on
+```
+
+### Disable a Trigger
+<Icon name="rocket" />
+
+Disables a haze watch trigger by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/haze-watch/trigger/<uuid>/off
+```
+
+**Example**
+```
+/sndwrks/server/v1/haze-watch/trigger/019c53a3-e032-7b3b-88cd-02b2d361959a/off
+```
+
+### Set Trigger Level
+<Icon name="rocket" />
+
+Sets the threshold level for a haze watch trigger. The value must be an integer between `0` and `1000`.
+
+**Address & Args**
+```
+/sndwrks/server/v1/haze-watch/trigger/<uuid>/trigger-level <level>
+```
+
+**Example**
+```
+/sndwrks/server/v1/haze-watch/trigger/019c53a3-e032-7b3b-88cd-02b2d361959a/trigger-level 500
+```
+
+:::note
+Values outside the 0–1000 range or non-integer values will be silently ignored.
+:::
+
+## Macros
+<Icon name="rocket" />
+Macros bundle commands together so you can fire complex actions from a single message. You can also control individual triggers and commands within a macro.
+
+### Fire a Macro
+<Icon name="rocket" />
+
+Executes a macro by its `uuid`. The macro must be enabled for this to do anything.
+
+**Address**
+```
+/sndwrks/server/v1/macros/<uuid>/fire
+```
+
+**Example**
+```
+/sndwrks/server/v1/macros/019c53a3-e032-7b3b-88cd-02b2d361959a/fire
+```
+
+### Enable a Macro
+<Icon name="rocket" />
+
+Turns a macro on by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/macros/<uuid>/on
+```
+
+### Disable a Macro
+<Icon name="rocket" />
+
+Turns a macro off by its `uuid`. A disabled macro won't fire even if triggered.
+
+**Address**
+```
+/sndwrks/server/v1/macros/<uuid>/off
+```
+
+### Enable a Macro Trigger
+<Icon name="rocket" />
+
+Enables a specific trigger within a macro. Changes are persisted immediately.
+
+**Address**
+```
+/sndwrks/server/v1/macros/trigger/<uuid>/on
+```
+
+**Example**
+```
+/sndwrks/server/v1/macros/trigger/019c53a3-e032-7b3b-88cd-02b2d361959a/on
+```
+
+### Disable a Macro Trigger
+<Icon name="rocket" />
+
+Disables a specific trigger within a macro. Changes are persisted immediately.
+
+**Address**
+```
+/sndwrks/server/v1/macros/trigger/<uuid>/off
+```
+
+### Enable a Macro Command
+<Icon name="rocket" />
+
+Enables a specific command within a macro. Changes are persisted and synced to the UI in real time.
+
+**Address**
+```
+/sndwrks/server/v1/macros/command/<uuid>/on
+```
+
+### Disable a Macro Command
+<Icon name="rocket" />
+
+Disables a specific command within a macro. Changes are persisted and synced to the UI in real time.
+
+**Address**
+```
+/sndwrks/server/v1/macros/command/<uuid>/off
+```
+
+## Chat
+<Icon name="rocket" />
+Send messages into the sndwrks chat system over OSC. Handy for automation alerts, show caller notes, or just saying hi from your lighting console.
+
+### Broadcast Message
+<Icon name="rocket" />
+
+Sends a message to all chat channels.
+
+**Address & Args**
+```
+/sndwrks/server/v1/chat/broadcast/send <sender-name> <message> <priority> <sender-uuid>
+```
+
+| Arg | Required | Default | Description |
+|---|---|---|---|
+| `sender-name` | No | `"OSC"` | Display name of the sender |
+| `message` | Yes | — | The message content |
+| `priority` | No | `"info"` | Priority level of the message |
+| `sender-uuid` | No | — | UUID of the sending device |
+
+**Example**
+```
+/sndwrks/server/v1/chat/broadcast/send "Stage Manager" "Places please" "info"
+```
+
+### Channel Message
+<Icon name="rocket" />
+
+Sends a message to a specific chat channel by its `uuid`. Same arguments as broadcast.
+
+**Address & Args**
+```
+/sndwrks/server/v1/chat/<channel-uuid>/send <sender-name> <message> <priority> <sender-uuid>
+```
+
+**Example**
+```
+/sndwrks/server/v1/chat/019c53a3-e032-7b3b-88cd-02b2d361959a/send "Lighting" "Standby LX Q1" "info"
+```
+
+### Clear Channel Alert
+<Icon name="rocket" />
+
+Clears the alert indicator on a specific chat channel.
+
+**Address**
+```
+/sndwrks/server/v1/chat/<channel-uuid>/clear-alert
+```
+
+**Example**
+```
+/sndwrks/server/v1/chat/019c53a3-e032-7b3b-88cd-02b2d361959a/clear-alert
+```

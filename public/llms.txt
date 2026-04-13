@@ -1,0 +1,21 @@
+# sndwrks
+
+> Complete documentation for sndwrks live entertainment command center - setup guides, product information, and API reference for controlling your show.
+
+sndwrks provides tools and systems for managing live entertainment environments, with a focus on OSC-based control, device management, and show automation.
+
+- [Welcome](https://docs.sndwrks.xyz/): Complete documentation homepage with overview of products, guides, and reference materials
+
+## Products
+
+- [Overview](https://docs.sndwrks.xyz/products/overview): Introduction to sndwrks products and how to use them
+- [sndwrks local](https://docs.sndwrks.xyz/products/sndwrks-local/01-sndwrks-local): Getting started with local device management and control
+- [Server](https://docs.sndwrks.xyz/products/sndwrks-local/server): The central server component that coordinates all sndwrks functionality
+
+## Guides
+
+- [Using Code to Send OSC](https://docs.sndwrks.xyz/guides/using-code-to-send-osc): Programming guide with Python and JavaScript examples for sending OSC messages to control the server
+
+## Reference
+
+- [OSC API V1](https://docs.sndwrks.xyz/reference/osc-api-v1): Complete OSC command reference including global controls, device management, e-stop functions, and sensor operations
