@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Astro Starlight documentation site. Uses Astro v5 with the Starlight integration for structured documentation.
 
+## Git
+
+Branch off `main` using the naming convention `main.<feature>` (e.g. `main.ci-fixes`).
+
 ## Commands
 
 | Command | Action |
