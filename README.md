@@ -1,4 +1,4 @@
-[!sndwrks-logo](src/assets/sndwrks_square.png)
+![sndwrks-logo](src/assets/sndwrks_square.png)
 
 # sndwrks documentation
 
