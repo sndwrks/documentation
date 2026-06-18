@@ -13,7 +13,7 @@ export default defineConfig({
     }),
 		starlight({
 			title: 'documentation',
-			social: [{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/tjPd6Q9A' },{ icon: 'github', label: 'GitHub', href: 'https://github.com/sndwrks' }],
+			social: [{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/tjPd6Q9A' },{ icon: 'github', label: 'GitHub', href: 'https://github.com/sndwrks/documentation' }],
       logo: {
         src: './src/assets/sndwrks-logo.svg'
       },
