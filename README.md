@@ -1,10 +1,10 @@
-![sndwrks-logo](src/assets/sndwrks_square.png)
+![sndwrks-logo](src/assets/sndwrks-square_200px-high.png)
 
 # sndwrks documentation
 
 Here's the repo for our docs!
 
-[see it online](https://docs.sndwrks.xyz)
+[see it online](https://docs.sndwrks.com)
 
 ## Contribution
 
