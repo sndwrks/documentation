@@ -9,7 +9,7 @@ This file contains the full content of every documentation page, concatenated fo
 
 
 # Welcome!
-Source: https://docs.sndwrks.xyz
+Source: https://docs.sndwrks.com
 
 
 
@@ -18,7 +18,7 @@ Source: https://docs.sndwrks.xyz
 
 
 # Overview
-Source: https://docs.sndwrks.xyz/products/overview
+Source: https://docs.sndwrks.com/products/overview
 
 Well you made it! Let's dive in on how to use our products.
 
@@ -27,7 +27,7 @@ Well you made it! Let's dive in on how to use our products.
 
 
 # Getting Started
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/server-hardware/getting-started
+Source: https://docs.sndwrks.com/products/sndwrks-local/server-hardware/getting-started
 
 
 
@@ -36,7 +36,7 @@ Source: https://docs.sndwrks.xyz/products/sndwrks-local/server-hardware/getting-
 
 
 # Quick Setup
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/server-hardware/quick-setup
+Source: https://docs.sndwrks.com/products/sndwrks-local/server-hardware/quick-setup
 
 Woo hoo! You just unboxed your super sweet sndwrks server. This is all very exiting. Let's get it rocking!
 
@@ -76,7 +76,7 @@ Now move onto the software quick start.
 
 
 # What is it?
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/server-hardware/what-is-it
+Source: https://docs.sndwrks.com/products/sndwrks-local/server-hardware/what-is-it
 
 ## TLDR;
 
@@ -105,7 +105,7 @@ The only peripheral that exists is a future expansion for GPIO on the server. We
 
 
 # sndwrks local
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/sndwrks-local-home
+Source: https://docs.sndwrks.com/products/sndwrks-local/sndwrks-local-home
 
 Click on the links below to learn about various parts of the sndwrks local server and the software it runs.
 
@@ -116,7 +116,7 @@ If you want to ask AI, you totally can. We generate docs that LLMs can read. Go 
 
 
 # Chat
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/chat
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/chat
 
 A simple chat for the team running the show. Sign in with your name, or click **create new user** if you don't have an account yet.
 
@@ -131,7 +131,7 @@ Notification preferences live in [Settings → Chat Notification Settings](/prod
 
 
 # Devices
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/devices
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/devices
 
 A **device** is anything the server talks to over the network: consoles, processors, video routers, sensors, or another sndwrks product.
 
@@ -217,7 +217,7 @@ As a note, this will only stay connected if the server can maintain a persistent
 
 
 # Getting Started
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/getting-started
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/getting-started
 
 
 
@@ -226,7 +226,7 @@ Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/getting-started
 
 
 # Haze Watch
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/haze-watch
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/haze-watch
 
 Haze Watch reads PM2.5, temperature, relative humidity, and CO₂ from your sensors. When the average crosses a level you set, it fires OSC at any device in the system.
 
@@ -271,7 +271,7 @@ A trigger flagged **E STOP** will engage the e-stop. Use it for hazardous condit
 
 
 # Macros
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/macros
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/macros
 
 Macros are node-based composable actions.
 
@@ -322,7 +322,7 @@ Use the filter box to find something quickly.
 
 
 # Overview
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/overview
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/overview
 
 The "Hello, and welcome!" page is your show-floor home base. It hosts a row of one-tap macro buttons. Tap a button, the macro fires.
 
@@ -342,7 +342,7 @@ Build the macros themselves on the [Macros](/products/sndwrks-local/software/mac
 
 
 # Quick Setup
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/quick-setup
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/quick-setup
 
 You have a server. We think you may want to know how to get it cooking.
 
@@ -362,7 +362,7 @@ Go ahead and tell the browser it's ok to trust the website.
 2. **Find it on the network**<br/> There are two options: Link-local or DHCP.<br/>`Link Local`<br/>If you don't have DHCP or are plugged in directly, this port has a [link-local address](https://en.wikipedia.org/wiki/Link-local_address) assigned of `169.254.1.1`. If your computer doesn't have a link-local address, set one like `169.254.1.99`.<br/>`DHCP`<br/> If you're plugging into the network with DHCP, this port is defaulted to have DHCP enabled and it will (hopefully) an IP address. Use an IP scanner to find the server or look in your DHCP server to see the address.
 
 3. **Open the web app**<br/> Use the IP address from Step 2 (either the DHCP address or `169.254.1.1`) and type that into a browser. 
-4. **Celebrate?**<br/> You should see the homepage of the server website. If not, well heck. We'd recommend confirming your computer network settings, cabling, and the address in the browser. If you're still having trouble reach out on [Discord](https://discord.gg/tjPd6Q9A) or our [Contact page](https://www.sndwrks.xyz/contact).
+4. **Celebrate?**<br/> You should see the homepage of the server website. If not, well heck. We'd recommend confirming your computer network settings, cabling, and the address in the browser. If you're still having trouble reach out on [Discord](https://discord.gg/tjPd6Q9A) or our [Contact page](https://www.sndwrks.com/contact).
 
 ### Server Homepage
 
@@ -431,7 +431,7 @@ You did it! The server was setup. Hopefully, that was quick. Now you can take th
 
 
 # Router
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/router
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/router
 
 The Router feature contains two routers (message routing, sACN), and a message history tab.
 
@@ -510,7 +510,7 @@ This tab shows all the messages that have been received and sent by the server i
 
 
 # Settings
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/settings
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/settings
 
 The settings page is split into three things: how to get help, power controls, and a stack of configuration accordions.
 
@@ -544,7 +544,7 @@ Each accordion expands a focused settings panel.
 
 
 # Utility
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/utility
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/utility
 
 The diagnostics drawer. Three tabs.
 
@@ -565,7 +565,7 @@ The server's syslog stream. Verbosity is set in [Settings → Syslog Settings](/
 
 
 # What is it?
-Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/what-is-it
+Source: https://docs.sndwrks.com/products/sndwrks-local/software/what-is-it
 
 ## TLDR;
 
@@ -584,7 +584,7 @@ We considered many options, but thought the browser was the best trade off. Ther
 
 
 # UDP vs TCP
-Source: https://docs.sndwrks.xyz/guides/udp-vs-tcp
+Source: https://docs.sndwrks.com/guides/udp-vs-tcp
 
 We'll dive into the differences between TCP and UDP.
 
@@ -652,7 +652,7 @@ A short cheat sheet:
 
 
 # Using Code to Send OSC
-Source: https://docs.sndwrks.xyz/guides/using-code-to-send-osc
+Source: https://docs.sndwrks.com/guides/using-code-to-send-osc
 
 This guide will walk you through some examples on how to use python or javascript to send OSC. We at sndwrks obviously like code a bit and we wanted to share some simple examples.
 
@@ -937,7 +937,7 @@ osascript -e 'tell application "Terminal" to close front window' &
 
 
 # AI Acknowledgment
-Source: https://docs.sndwrks.xyz/reference/ai-disclaimer
+Source: https://docs.sndwrks.com/reference/ai-disclaimer
 
 We leverage AI (mostly claude) to help us generate this documentation, and make sure it's current. We are a small team, and this helps us make sure we have comprehensive documentation.
 
@@ -948,7 +948,7 @@ We don't let it generate critical documentation like setup guides, and a human a
 
 
 # OSC API V1
-Source: https://docs.sndwrks.xyz/reference/osc-api-v1
+Source: https://docs.sndwrks.com/reference/osc-api-v1
 
 This is where you'll find the documentation on what OSC messages you can send to the server to control it. From shutdown to confetti.
 

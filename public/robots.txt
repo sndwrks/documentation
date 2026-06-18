@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://docs.sndwrks.com/sitemap-index.xml
+
+# LLM-friendly documentation:
+# https://docs.sndwrks.com/llms.txt
+# https://docs.sndwrks.com/llms-full.txt
