@@ -4,12 +4,15 @@ description: sndwrks complete documentation.
 template: splash # Remove or comment out this line to display the site sidebar on this page.
 hero:
   tagline: Setup and control your live entertainment command center.
+  image:
+    alt: the super duper cool sndwrks logo
+    file: /src/assets/sndwrks-logo-big-square.svg
   actions:
     - text: Get Started
       link: /products/overview
       icon: right-arrow
     - text: Go to our website
-      link: https://sndwrks.xyz
+      link: https://sndwrks.com
       icon: external
       variant: minimal
 ---
@@ -20,19 +23,19 @@ import { LinkCard, CardGrid } from '@astrojs/starlight/components';
   <LinkCard
     title="Products"
     icon="open-book"
-    description="All the information on how to use our products"
+    description="All the information on how to use our products."
     href="/products/overview"
   />
   <LinkCard
     title="Guides"
     icon="open-book"
-    description="Handy how-tos. Neat."
+    description="Handy how-tos. Neat!"
     href="/guides/using-code-to-send-osc/"
   />
   <LinkCard
     title="Reference"
     icon="open-book"
-    description="Get right down into the nitty gritty of our APIs"
+    description="Technical details like API information."
     href="/reference/osc-api-v1"
   />
 </CardGrid>

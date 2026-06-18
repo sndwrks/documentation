@@ -1,0 +1,181 @@
+---
+title: Settings
+description: Power, support, and configuration.
+sidebar:
+  order: 11
+---
+
+import { Icon, Aside } from '@astrojs/starlight/components';
+
+The settings page is well, ya know, settings. There's various options and actions here to manage the server.
+
+## Global
+<Icon name="star" />
+
+These are show settings and actions.
+
+### Power/Reset Buttons
+<Icon name="star" />
+
+- **Shutdown Server** — clean shutdown of the server process.
+- **Reboot Server** — restart the host.
+- **Shutdown Sensors** — power down haze watch sensors.
+- **Reset Sensors** — soft restart of the sensors.
+
+<Aside type="caution">
+Always shut down sensors and the server before pulling power. Yanking the cord can make the server sad. Which will likely make you sad. Then we'll be sad because we have to fix it.
+</Aside>
+
+### Show Information
+<Icon name="star" />
+
+Enter the name of your show and it's location.
+
+### E-Stop Settings
+<Icon name="star" />
+
+This checkbox enables E-Stop on server startup. You may want this if you're doing haze control so that the server doesn't try and turn stuff on before you're ready.
+
+### Double Message protection
+<Icon name="star" />
+
+This drops duplicate OSC messages that are received by the server in a specific timeframe.
+
+<Aside type="tip" logo="pencil">
+You may not need to do a main/backup switchover if this setting is enabled. The server will just eat whichever message arrives second, so if a device fails the server is none the wiser and one message still gets through.
+</Aside>
+
+### Time Format
+<Icon name="star" />
+
+Select *24h* or *12h* as you wish. 
+
+## Server
+<Icon name="star" />
+
+Settings related to the server hardware itself specifically network settings.
+
+### Network Settings
+<Icon name="star" />
+
+Here is where you set the network information for the server. You can add VLANs, setup DHCP as desired.
+
+The IP addresses with subnets should be entered in as `xxx.xxx.xxx.xxx/xx` a.k.a. [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing) notation. An example is `10.40.20.8/24`.
+
+Select the interface you want to change and then adust the settings and click save!
+
+<Aside type="note">
+**Port 8 (server) or Port 2 always has a link local address set `169.254.1.1` in addition to what you set**
+
+Why do we do this? Well, there's nothing worse than when you set the ip address wrong and then all of the sudden you can't access your devices anymore.
+
+This allows you to get back into the server if you oopsie.
+</Aside>
+
+## Chat
+<Icon name="star" />
+
+These are the settings for chat, currently in preview.
+
+The settings are unique to each browser.
+
+### Chat Notifications
+<Icon name="star" />
+
+These are various notifications settings for what happens when your browser receives a message. We really like the rainbow one so that's the default.
+
+## Haze Watch
+<Icon name="star" />
+
+There's no settings here! Haze Watch is just that good. We kid.
+
+We'll probably add some stuff here eventually, and wanted to keep the placeholder.
+
+## Router
+<Icon name="star" />
+
+The main settings here allow for port control and resetting of network server itself.
+
+### Network Server ports
+<Icon name="star" />
+
+You can adjust the ports the server listens on to your heart's content.
+
+The network server portion of the server will restart after the change. You'll need to change the ports your devices use to connect to the server.
+
+We reserve a few ports for sndwrks internal use, and we won't let you set one that we need.
+
+### Network Server Control
+<Icon name="star" />
+
+This allows you to just restart the network server. It may be helpful to have your devices reconnect, or just, ya know, turn it off and on again.
+
+## sACN
+<Icon name="star" />
+
+These are the various settings related to sACN.
+
+### sACN Worker
+<Icon name="star" />
+
+The server has a separate module to handle sACN. You can turn this off if you don't need sACN on your show.
+
+### sACN Worker Control
+<Icon name="star" />
+
+Similar to the router network server, you can reset the sACN worker. This may be helpful for various reasons just know that if you hit that button, it's going to interrupt the sACN functionality of the server. 
+
+## Syslog
+<Icon name="star" />
+
+Here lies the syslog configuration. The syslog server listens on port `1514` for UDP syslog messages.
+
+<Aside type="note" logo="book">
+**What's syslog?**
+
+We're glad you asked! Syslog (short for system logging) is a standardized message format that various devices can send like network switches.
+
+If you have managed switches on your show, there's a good chance they can send syslog messages to the server. This is very helpful to troubleshoot network problems because switches often delete their logs when they shut down.
+
+[Wikipedia Page](https://en.wikipedia.org/wiki/Syslog)
+[What is syslog?](https://dev.to/emily_assetloom/what-is-syslog-a-simple-guide-to-understanding-system-logging-4o2e)
+</Aside>
+
+### Syslog Server
+<Icon name="star" />
+
+Like sACN, you can turn off syslog from running if you don't need it. 
+
+### Syslog Server Control
+<Icon name="star" />
+
+This allows you to restart the syslog server. The 'ol turn it off and on again. 
+
+## Backup & Restore
+<Icon name="star" />
+
+We figure you may want to save your work, or load a previous state.
+
+The server also automatically creates more comprehensive database backups and uploads them to our servers, but this way you don't have to call us to load another show.
+
+### Create a Backup 
+<Icon name="star" />
+
+This takes all your show settings like devices, network configuration etc, and zips it into a nice `.sdwx` file. 
+
+We do not save measurements or messages because those can number in the millions, and we want your file size to be reasonable.
+
+### Restore from Backup
+<Icon name="star" />
+
+This allows you to load a `.sdwx` file you have into the server. Drag and drop or browse for your file to upload. After you've uploaded a file the server will restart to load the information.
+
+<Aside type="danger">
+
+The server will create a database backup before restore, but know the restore will **overwrite all your settings**!!!
+
+If you accidentally load the wrong fileand don't have a backup yourself, you will have to call us to fix it.
+
+So, just ya know, be careful! 
+
+</Aside>

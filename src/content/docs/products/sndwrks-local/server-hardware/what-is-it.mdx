@@ -1,7 +1,8 @@
 ---
 title: What is it?
 description: What is the server, what's it's function?
-order: 2
+sidebar:
+  order: 2
 ---
 
 import { Card, Steps, Icon, Aside } from '@astrojs/starlight/components';
@@ -19,11 +20,19 @@ The server has three types of ports: power, network ports, and peripherals.
 ### Power
 <Icon name="star" />
 
-The server has two power supplies for redundancy. Either power supply can power the server on its own though we recommend you always use both.
+If you have a server, it has two power supplies for redundancy. Either power supply can power the server on its own though we recommend you always use both. The server smol has one psu.
 
 <Aside type="tip" icon="information">
-We recommend you run one power supply on regular power and on a UPS (uninterruptible power supply). This configuration keeps you covered if you lose power or the UPS fails.
+We recommend you run one power supply on regular power and on a UPS (uninterruptible power supply). This configuration keeps you covered if you lose power or the UPS fails. The server smol should be powered via UPS.
 </Aside>
 
 ### Network
 <Icon name="star" />
+
+The server has either 8x 2.5G network ports (server) or 2x 1G network ports. Port 8 or Port 2 (server/smol) have permanent link local addresses set at `169.254.1.1`. On both server and smol, network connections can be a single network or a trunk with multiple VLANs.
+
+### Peripherals
+<Icon name="star" />
+
+The only peripheral that exists is a future expansion for GPIO on the server. We have plans for some other bits, but if there's a connection you want that we don't have let us know!
+

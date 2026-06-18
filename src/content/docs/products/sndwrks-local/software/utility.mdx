@@ -1,0 +1,43 @@
+---
+title: Utility
+description: Network scan, events, syslog.
+sidebar:
+  order: 10
+---
+
+import { Steps, Icon, Aside } from '@astrojs/starlight/components';
+
+Ah yes, the utility page. This is a bunch of assorted pieces that will smooth your show experience.
+
+## Network
+<Icon name="star" />
+
+This is the built-in network scanner. It allows you to specify which networks you want to scan.
+
+The IP addresses with subnets should be entered in as `xxx.xxx.xxx.xxx/xx` a.k.a. [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing) notation. An example is `10.40.20.8/24`.
+
+### Run a scan
+<Icon name="star" />
+
+Here's how to run a network scan.
+
+<Steps>
+1. Note the various scan speeds and their consequences
+2. Optionally, open the available networks accordion and select which subnets you want to scan. Otherwise, you can just type and address in the include.
+3. Choose a scan speed. (did you read about the different speeds?)
+4. Add other subnets, or optionally exclude subnets you don't want to scan.
+5. Click scan! 
+6. View the scan results. You can use the found devices to quickly add devices into the server.
+</Steps>
+
+## Events
+<Icon name="star" />
+
+This is all the events the server has had happen to it. You may not need to get in here all that often, but it's helpful to troubleshoot like when did this device last connect or did this macro error.
+
+## Syslog
+<Icon name="star" />
+
+The server's syslog messages it has received. You can search or filter for various messages here.
+
+We find this helpful when diagnosing a network issue like ports going up and down or spanning tree elections.

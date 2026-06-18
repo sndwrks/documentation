@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 230" role="img" aria-labelledby="t">
+  <title id="t">TCP retransmit: a packet is lost, the sender times out and resends, the second copy is acknowledged</title>
+  <style>
+    .fg { fill: #2b2b2b; }
+    .sfg { stroke: #2b2b2b; }
+    .ac { fill: #c2f280; }
+    .dr { fill: #d97757; }
+    .label { font: 500 14px ui-sans-serif, system-ui, sans-serif; fill: #2b2b2b; }
+    .pktlbl { font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #2b2b2b; }
+    .small { font: 500 11px ui-sans-serif, system-ui, sans-serif; fill: #2b2b2b; }
+    .wire { stroke: #b8b6ad; stroke-dasharray: 4 4; fill: none; }
+    .timeout { font: 600 12px ui-sans-serif, system-ui, sans-serif; fill: #d97757; }
+    @media (prefers-color-scheme: dark) {
+      .fg { fill: #d8d6cf; }
+      .sfg { stroke: #d8d6cf; }
+      .label { fill: #d8d6cf; }
+      .small { fill: #d8d6cf; }
+      .wire { stroke: #4f4d48; }
+    }
+  </style>
+
+  <rect x="30" y="70" width="130" height="80" fill="none" class="sfg" stroke-width="1.5"/>
+  <text x="95" y="115" text-anchor="middle" class="label">Sender</text>
+
+  <rect x="440" y="70" width="130" height="80" fill="none" class="sfg" stroke-width="1.5"/>
+  <text x="505" y="115" text-anchor="middle" class="label">Receiver</text>
+
+  <line x1="160" y1="100" x2="440" y2="100" class="wire" stroke-width="1.5"/>
+  <line x1="160" y1="135" x2="440" y2="135" class="wire" stroke-width="1.5"/>
+
+  <g opacity="0" transform="translate(-9999 -9999)">
+    <rect x="-26" y="-12" width="52" height="24" fill="#fff" class="sfg" stroke-width="1.5"/>
+    <text y="4" text-anchor="middle" class="pktlbl">data</text>
+    <animateTransform attributeName="transform" type="translate"
+      values="160,100; 160,100; 300,100; 320,160; 320,160"
+      keyTimes="0; 0.05; 0.3; 0.35; 1" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity"
+      values="0; 1; 1; 0; 0" keyTimes="0; 0.05; 0.3; 0.35; 1"
+      dur="6s" repeatCount="indefinite"/>
+  </g>
+
+  <g opacity="0">
+    <text x="95" y="170" text-anchor="middle" class="timeout">timeout… retry</text>
+    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0"
+      keyTimes="0; 0.35; 0.4; 0.5; 0.55; 1" dur="6s" repeatCount="indefinite"/>
+  </g>
+
+  <g opacity="0" transform="translate(-9999 -9999)">
+    <rect x="-30" y="-12" width="60" height="24" class="ac" stroke="#2b2b2b" stroke-width="1.5"/>
+    <text y="4" text-anchor="middle" class="pktlbl">retry</text>
+    <animateTransform attributeName="transform" type="translate"
+      values="160,100; 160,100; 440,100; 440,100"
+      keyTimes="0; 0.55; 0.8; 1" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity"
+      values="0; 0; 1; 1; 0" keyTimes="0; 0.55; 0.6; 0.8; 1"
+      dur="6s" repeatCount="indefinite"/>
+  </g>
+
+  <g opacity="0" transform="translate(-9999 -9999)">
+    <rect x="-22" y="-12" width="44" height="24" fill="#fff" class="sfg" stroke-width="1.5"/>
+    <text y="4" text-anchor="middle" class="pktlbl">ACK</text>
+    <animateTransform attributeName="transform" type="translate"
+      values="440,135; 440,135; 160,135; 160,135"
+      keyTimes="0; 0.82; 0.97; 1" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity"
+      values="0; 0; 1; 1; 0" keyTimes="0; 0.82; 0.85; 0.97; 1"
+      dur="6s" repeatCount="indefinite"/>
+  </g>
+
+  <text x="300" y="200" text-anchor="middle" class="small">lost · timeout · retried · acknowledged</text>
+</svg>

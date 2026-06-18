@@ -10,7 +10,8 @@ This guide will walk you through some examples on how to use python or javascrip
 By then end of the guide, you'll have two working scripts in python and node.js that will allow you to send osc via the terminal anywhere you want. We find scripts like this extremely helpful for testing devices when we don't want to use a full tool like QLab or ETC EOS.
 
 
-**Example: Make Confetti with Python**
+
+**What will I be able to do: make Confetti with Python!**
 ```python title="confetti.py"
 # pip3 install python-osc
 from pythonosc import udp_client
@@ -25,12 +26,25 @@ client.send_message("/sndwrks/server/v1/confetti", [])
 # python3 confetti.py
 ```
 
+:::note
+This guide assumes you have a code editor and have basic Terminal skills like changing directories and running commands.
+
+If that's new to you, here's an opinionated prompt for an AI chat that may help:
+```
+I would like to get a setup guide for VS Code and some basic terminal instructions like changing directories and executing commands, so I can run some simple python 3.12 or node.js 24 code. The guide will cover installing python, pyenv, nvm and node 24. I just need to know how to get that far.
+```
+:::
+
+:::tip
+The examples below send OSC over UDP — that's the conventional transport for OSC. If you're new to why UDP and not TCP, see [UDP vs TCP](/guides/udp-vs-tcp/).
+:::
+
 ## Setup
 <Icon name="open-book" />
 
 To complete this guide, you'll need `python 3.12` and `node.js 24`. If you already know how to set those up, skip ahead. These instructions are for macOS with Terminal.
 
-:::note
+:::tip
 There's lots of different ways to get node and python running. This is one way that keeps things tidy.
 :::
 
@@ -231,7 +245,7 @@ node sendOsc.js 10.0.10.100 52000 /sndwrks/server/v1/chat/broadcast/send "Stage 
 
 Let's put one of these scripts to use. Say you want the sndwrks server to know when a Mac on your network has finished booting. We can create a `.command` file that runs on login and sends an OSC message automatically.
 
-A `.command` file is just a bash script that macOS knows how to double-click and run in Terminal. More importantly, you can add it to your Login Items so it runs every time you log in.
+A `.command` file is just a bash script that macOS knows how execute. This is pretty neat because you can add it to your Login Items so it runs every time you log in.
 
 ### Create the script
 
@@ -247,7 +261,7 @@ sleep 10
 python ~/scripts/send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/event/custom "Mac Online" "Booth Mac finished booting"
 ```
 
-Adjust the IP, port, and message to match your setup. This assumes you saved `send_osc.py` to `~/scripts/` — update the path to wherever yours lives. You could use the Node.js script here too, just swap the command.
+Adjust the IP, port, and message to match your setup. This assumes you saved `send_osc.py` to `~/scripts/`. Update the path to wherever yours lives. You could use the Node.js script here too, just swap the command.
 
 ### Make it executable
 
@@ -256,7 +270,7 @@ macOS won't run it unless you mark it as executable:
 chmod +x ~/Desktop/startup-completed.command
 ```
 
-You can double-click it now to test. Terminal should open, wait 10 seconds, send the message, and close.
+You can double-click it now to test. Terminal should open, wait 10 seconds, send the message.
 
 ### Add to Login Items
 

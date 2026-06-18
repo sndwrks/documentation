@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 220" role="img" aria-labelledby="t">
+  <title id="t">TCP show-control example: console fires a single GO cue and receives an acknowledgement from the server</title>
+  <style>
+    .fg { fill: #2b2b2b; }
+    .sfg { stroke: #2b2b2b; }
+    .ac { fill: #c2f280; }
+    .label { font: 500 14px ui-sans-serif, system-ui, sans-serif; fill: #2b2b2b; }
+    .pktlbl { font: 700 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #2b2b2b; }
+    .small { font: 500 11px ui-sans-serif, system-ui, sans-serif; fill: #2b2b2b; }
+    .wire { stroke: #b8b6ad; stroke-dasharray: 4 4; fill: none; }
+    @media (prefers-color-scheme: dark) {
+      .fg { fill: #d8d6cf; }
+      .sfg { stroke: #d8d6cf; }
+      .label { fill: #d8d6cf; }
+      .small { fill: #d8d6cf; }
+      .wire { stroke: #4f4d48; }
+    }
+  </style>
+
+  <rect x="30" y="80" width="130" height="60" fill="none" class="sfg" stroke-width="1.5"/>
+  <text x="95" y="116" text-anchor="middle" class="label">Console</text>
+
+  <rect x="440" y="80" width="130" height="60" fill="none" class="sfg" stroke-width="1.5"/>
+  <text x="505" y="116" text-anchor="middle" class="label">Server</text>
+
+  <line x1="160" y1="100" x2="440" y2="100" class="wire" stroke-width="1.5"/>
+  <line x1="160" y1="130" x2="440" y2="130" class="wire" stroke-width="1.5"/>
+
+  <g opacity="0" transform="translate(-9999 -9999)">
+    <rect x="-22" y="-13" width="44" height="26" class="ac" stroke="#2b2b2b" stroke-width="1.5"/>
+    <text y="4" text-anchor="middle" class="pktlbl">GO</text>
+    <animateTransform attributeName="transform" type="translate"
+      values="160,100; 440,100; 440,100; 440,100"
+      keyTimes="0; 0.4; 0.45; 1" dur="5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity"
+      values="1; 1; 0; 0" keyTimes="0; 0.4; 0.45; 1"
+      dur="5s" repeatCount="indefinite"/>
+  </g>
+
+  <g>
+    <circle cx="505" cy="110" r="0" class="ac" stroke="#2b2b2b" stroke-width="1.5">
+      <animate attributeName="r" values="0; 0; 30; 30; 0"
+        keyTimes="0; 0.4; 0.5; 0.55; 0.56" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0; 0; 0.7; 0; 0"
+        keyTimes="0; 0.4; 0.42; 0.6; 1" dur="5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <g opacity="0" transform="translate(-9999 -9999)">
+    <rect x="-22" y="-13" width="44" height="26" fill="#fff" class="sfg" stroke-width="1.5"/>
+    <text y="4" text-anchor="middle" class="pktlbl">ACK</text>
+    <animateTransform attributeName="transform" type="translate"
+      values="440,130; 440,130; 160,130; 160,130"
+      keyTimes="0; 0.5; 0.92; 1" dur="5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity"
+      values="0; 0; 1; 1; 0" keyTimes="0; 0.5; 0.55; 0.92; 1"
+      dur="5s" repeatCount="indefinite"/>
+  </g>
+
+  <text x="300" y="190" text-anchor="middle" class="small">one cue · one acknowledgement · you know it landed</text>
+</svg>

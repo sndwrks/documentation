@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" role="img" aria-labelledby="t">
+  <title id="t">TCP three-way handshake: SYN, SYN-ACK, ACK, then the channel is open</title>
+  <style>
+    .fg { fill: #2b2b2b; }
+    .sfg { stroke: #2b2b2b; }
+    .ac { fill: #c2f280; }
+    .label { font: 500 14px ui-sans-serif, system-ui, sans-serif; fill: #2b2b2b; }
+    .pktlbl { font: 700 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #2b2b2b; }
+    .small { font: 500 12px ui-sans-serif, system-ui, sans-serif; fill: #2b2b2b; }
+    .wire { stroke: #b8b6ad; stroke-dasharray: 4 4; fill: none; }
+    .arrow { stroke: #2b2b2b; fill: none; stroke-width: 2; }
+    @media (prefers-color-scheme: dark) {
+      .fg { fill: #d8d6cf; }
+      .sfg { stroke: #d8d6cf; }
+      .label { fill: #d8d6cf; }
+      .small { fill: #d8d6cf; }
+      .wire { stroke: #4f4d48; }
+      .arrow { stroke: #d8d6cf; }
+    }
+  </style>
+
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2b2b2b"/>
+    </marker>
+  </defs>
+
+  <rect x="30" y="40" width="130" height="160" fill="none" class="sfg" stroke-width="1.5"/>
+  <text x="95" y="225" text-anchor="middle" class="label">Client</text>
+
+  <rect x="440" y="40" width="130" height="160" fill="none" class="sfg" stroke-width="1.5"/>
+  <text x="505" y="225" text-anchor="middle" class="label">Server</text>
+
+  <g opacity="0">
+    <line x1="160" y1="80" x2="430" y2="80" class="arrow" marker-end="url(#ar)"/>
+    <rect x="260" y="62" width="80" height="22" fill="#fff" stroke="#2b2b2b" stroke-width="1.2"/>
+    <text x="300" y="78" text-anchor="middle" class="pktlbl">SYN</text>
+    <animate attributeName="opacity" values="0; 0; 1; 1; 0"
+      keyTimes="0; 0.167; 0.18; 0.917; 1" dur="6s" repeatCount="indefinite"/>
+  </g>
+
+  <g opacity="0">
+    <line x1="440" y1="120" x2="170" y2="120" class="arrow" marker-end="url(#ar)"/>
+    <rect x="240" y="102" width="120" height="22" fill="#fff" stroke="#2b2b2b" stroke-width="1.2"/>
+    <text x="300" y="118" text-anchor="middle" class="pktlbl">SYN-ACK</text>
+    <animate attributeName="opacity" values="0; 0; 1; 1; 0"
+      keyTimes="0; 0.333; 0.343; 0.917; 1" dur="6s" repeatCount="indefinite"/>
+  </g>
+
+  <g opacity="0">
+    <line x1="160" y1="160" x2="430" y2="160" class="arrow" marker-end="url(#ar)"/>
+    <rect x="265" y="142" width="70" height="22" fill="#fff" stroke="#2b2b2b" stroke-width="1.2"/>
+    <text x="300" y="158" text-anchor="middle" class="pktlbl">ACK</text>
+    <animate attributeName="opacity" values="0; 0; 1; 1; 0"
+      keyTimes="0; 0.5; 0.51; 0.917; 1" dur="6s" repeatCount="indefinite"/>
+  </g>
+
+  <g opacity="0">
+    <rect x="220" y="186" width="160" height="22" class="ac" stroke="#2b2b2b" stroke-width="1.2"/>
+    <text x="300" y="202" text-anchor="middle" class="pktlbl">channel open</text>
+    <animate attributeName="opacity" values="0; 0; 1; 1; 0"
+      keyTimes="0; 0.667; 0.7; 0.917; 1" dur="6s" repeatCount="indefinite"/>
+  </g>
+</svg>

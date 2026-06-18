@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightThemeFlexoki from 'starlight-theme-flexoki'
 import astroExpressiveCode from 'astro-expressive-code'
+import starlightImageZoom from 'starlight-image-zoom'
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,23 +25,28 @@ export default defineConfig({
             'products/sndwrks-local/home',
             {
               label: 'Server Hardware',
-              autogenerate: { directory: 'products/sndwrks-local/server-hardware'}
+              items: [{ autogenerate: { directory: 'products/sndwrks-local/server-hardware' } }]
+            },
+            {
+              label: 'Software',
+              items: [{ autogenerate: { directory: 'products/sndwrks-local/software' } }]
             }
           ]
         },
 				{
 					label: 'Guides',
-          autogenerate: { directory: 'guides' },
+          items: [{ autogenerate: { directory: 'guides' } }],
 				},
 				{
 					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					items: [{ autogenerate: { directory: 'reference' } }],
 				},
 			],
       plugins: [
         starlightThemeFlexoki({
           accentColor: 'green',
-        })
+        }),
+        starlightImageZoom(),
       ],
       customCss: [
         './src/styles/custom.css'

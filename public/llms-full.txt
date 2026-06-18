@@ -1,0 +1,1340 @@
+# sndwrks
+
+> Complete documentation for the sndwrks live entertainment command center — setup guides, product information, and API reference for controlling your show.
+
+This file contains the full content of every documentation page, concatenated for LLM ingestion.
+
+
+---
+
+
+# Welcome!
+Source: https://docs.sndwrks.xyz
+
+
+
+
+---
+
+
+# Overview
+Source: https://docs.sndwrks.xyz/products/overview
+
+Well you made it! Let's dive in on how to use our products.
+
+
+---
+
+
+# Getting Started
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/server-hardware/getting-started
+
+
+
+
+---
+
+
+# Quick Setup
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/server-hardware/quick-setup
+
+Woo hoo! You just unboxed your super sweet sndwrks server. This is all very exiting. Let's get it rocking!
+
+## Inspection
+
+We know you want to get going as soon as you can, but it's important to do a quick visual inspection of the server.
+
+Shipping companies have been known to break stuff, if anything looks out of place please get in touch ASAP and we'll help you resolve it.
+
+## Plug it in
+
+Now, let's go ahead and plug it in.
+
+  
+    
+      1. Plug in both PSUs. The green LED will illuminate if the line has power. We recommend on PSU into UPS power and one into non-UPS power.
+      2. Plug a network cable into port 8 either directly to a computer or a switch.
+      3. Hit the power button.
+      4. Wait 2-5 minutes for the applications to all load.
+    
+  
+  
+    
+      1. Plug in the power cable.
+      2. Plug in a network cable into port 2 either directly to a computer or a switch.
+      3. Hit the power button.
+      4. Wait 2-5 minutes for the applications to all load.
+    
+  
+
+## That's it!
+
+Now move onto the software quick start.
+
+
+---
+
+
+# What is it?
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/server-hardware/what-is-it
+
+## TLDR;
+
+The server sits at the center of your show. It allows all departments to connect their networks to it without having to tie the networks together. The physical manifestation of sndwrks.
+
+## Ports
+
+The server has three types of ports: power, network ports, and peripherals.
+
+### Power
+
+If you have a server, it has two power supplies for redundancy. Either power supply can power the server on its own though we recommend you always use both. The server smol has one psu.
+
+We recommend you run one power supply on regular power and on a UPS (uninterruptible power supply). This configuration keeps you covered if you lose power or the UPS fails. The server smol should be powered via UPS.
+
+### Network
+
+The server has either 8x 2.5G network ports (server) or 2x 1G network ports. Port 8 or Port 2 (server/smol) have permanent link local addresses set at `169.254.1.1`. On both server and smol, network connections can be a single network or a trunk with multiple VLANs.
+
+### Peripherals
+
+The only peripheral that exists is a future expansion for GPIO on the server. We have plans for some other bits, but if there's a connection you want that we don't have let us know!
+
+
+---
+
+
+# sndwrks local
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/sndwrks-local-home
+
+Click on the links below to learn about various parts of the sndwrks local server and the software it runs.
+
+If you want to ask AI, you totally can. We generate docs that LLMs can read. Go ahead: "hey claude give me the steps to setup my server and connect x devices"
+
+
+---
+
+
+# Chat
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/chat
+
+A simple chat for the team running the show. Sign in with your name, or click **create new user** if you don't have an account yet.
+
+Chat is currently in preview, so if there's features you want to see please let us know.
+
+## Notifications
+
+Notification preferences live in [Settings → Chat Notification Settings](/products/sndwrks-local/software/settings).
+
+
+---
+
+
+# Devices
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/devices
+
+A **device** is anything the server talks to over the network: consoles, processors, video routers, sensors, or another sndwrks product.
+
+Devices are the building blocks for everything else: routing, macros, and haze watch all reference them.
+
+We are consistently adding new device types, if there's something you want to control tell us! 
+
+## Add a device
+
+There's three ways to add devices: manually, via network scan, or by sending a message to the server. We will show the manual process here.
+
+1. Open **Devices** and click **New**. An inline editor opens on the right.
+2. Click the heading to rename, click the description to edit. We find it's helpful to add **In** or **Out** to the name to indicate the direction of the device.
+3. Pick a **Device Type**. `Network` and `Sensor` are the generic types; the rest are specific device integrations (e.g. `dnb-audiotechnik_aes70-oca`, `lacoustics_la4x`, `blackmagic_videohub`, `adderlink_x-dip`).
+4. Set **IP Address** and **Port** or other depending on the integrations. For example, the d&b port is automatically set.
+5. Set **Direction** (incoming, outgoing, or both — depending on the integration).
+6. Check **Router** if you want this device to appear as a row or column in the routing matrix.
+7. Check **Enabled** if you want the device to start working immediately.
+8. Optionally select **Transport Type/Message Type** if you checked **Router**.
+9. Press `⏎` to save, or `esc` to discard, or click the buttons there.
+
+    **New Device Page**
+    ![New device page showing device creation in progress](../../../../../assets/screenshots/new-device.png)
+
+### Options
+
+There are various options to define how you'd like your device to behave.
+
+If a device was added by sending a message to the server, these bits will be automatically filled out based on what the server was able to detect.
+
+#### Enabled
+
+This turns the device on. This can be controlled via the [OSC API](/reference/osc-api-v1/#enable-a-device).
+
+If a device is disabled, only OSC API commands from this device will work, every other function associated with the device (router, macros, etc) will not function.
+
+#### Ignore port
+
+Ignore port allows for incoming connections that send on multiple ports (like Qlab). Enabling this option will only check the IP address for a connection type and transport.
+
+So, if you're sending Qlab on TCP, you'd enable this, but you could send in on UDP from that same IP and that would be a different device.
+
+#### Router
+
+This exposes the device in the router matrix allowing for message routing for this device. The direction exposes it as an input (incoming), output (outgoing) or both (bi-directional).
+
+Selecting `Router` exposes some more options for a device.
+
+#### Direction
+
+This option is exposed after `Router` is selected. It selects how this device should behave.
+
+For example, a console sending udp on a specific port would be incoming, but that same console would be another device as outgoing to send to the console. A TCP device could be bidirectional if you want to use the same connection to send and receive data. 
+
+#### Transport Type
+
+Transport Type selects which network transport to use: UDP or TCP.
+
+We recommend that you use TCP for show critical single messages like a `GO`. We recommend that you use UDP for messages that come in rapid fire like faders or tracking information.
+
+Do you want to learn more about UDP vs TCP? [Read our guide](/guides/udp-vs-tcp)
+
+#### Message Type
+
+This selects the message type you'd expect the device to send or receive. The server will do it's best to dynamically identify the type, but this allows for eager parsing.
+
+We like eager parsing because it allows us to lower the latency, which we think is important in live environments.
+
+## Deleting a device
+
+You may not want a device to stay forever. Well, we have a unique solution to that: the Delete Button! Wow!
+
+Click on the `X` on the device item in the list and it will show a confirmation modal. Then confirm that and it's gone! As a note, we do NOT have undo so this is a permanent action. Give us a call if you need something restored.
+
+## Connection state
+
+Each device card shows its live state: `disconnected`, `connecting`, or `connected`.
+
+As a note, this will only stay connected if the server can maintain a persistent connection to the device in question. UDP for example is inherently stateless, so it will never say connected.
+
+
+---
+
+
+# Getting Started
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/getting-started
+
+
+
+
+---
+
+
+# Haze Watch
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/haze-watch
+
+Haze Watch reads PM2.5, temperature, relative humidity, and CO₂ from your sensors. When the average crosses a level you set, it fires OSC at any device in the system.
+
+## Live
+
+The dashboard shows the current PM2.5 average, current temperature, a 30-minute moving average graph, and per-sensor cards with all four readings. Read-only — nothing to configure here.
+
+## Build a command first
+
+A **command** is the OSC message that gets sent. Build commands before triggers so you have something to attach.
+
+1. Open **Haze Watch → Commands** and click `+ New`.
+
+2. Name it. Optionally describe it.
+
+3. Pick an **OSC Destination** — this is a routed device (e.g. `EOS (TCP)`). It must already exist in [Devices](/products/sndwrks-local/software/devices).
+
+4. Set **Above Message** — sent when haze rises above the trigger level. Raw OSC, e.g. `/eos/chan/3 25`.
+
+5. Set **Below Message** — sent when haze drops below.
+
+6. Toggle **Enabled** and **Save**.
+
+## Then a trigger
+
+A **trigger** is a level-watcher that runs commands.
+
+1. Open **Haze Watch → Triggers** and click `+ New`.
+
+2. Name it.
+
+3. Set **Trigger Level (PM2.5 mg/m³)** — the threshold.
+
+4. In the **COMMANDS** section, attach the commands you want to run.
+
+5. Toggle **Enabled** and **Save**.
+
+A trigger flagged **E STOP** will engage the e-stop. Use it for hazardous conditions only.
+
+
+---
+
+
+# Macros
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/macros
+
+Macros are node-based composable actions.
+
+They're very handy for creating complex controls easily. As an example, you could build a macro to send yourself an email, change a videohub crosspoint, and send an OSC message.
+
+They consist of **triggers**, **commands**, and **transformers**. Triggers, for example an OSC message, fire the macro. Commands execute actions, like muting an OCA/AES70-capable amplifier. Transformers modify the macro execution with blocks like delay.
+
+## Build a Macro
+
+Let's make our first macro! 
+
+1. Click the Plus `+` next to the macro dropdown.
+2. Enter a name and change the debounce value is desired. Debounce is the time allowed before firing again.
+3. Press `⏎` to save, or `esc` to discard, or click the buttons.
+4. Now, if you don't have any triggers create one.
+5. Drag the created trigger to the triggers node.
+6. If you don't have a command, create one. (email is quick)
+7. Drag the command onto the macro canvas.
+8. Connect the trigger node to the command node.
+9. Click `Save` in the top right corner.
+
+## Macros
+
+The macros page consists of 3 major sections: the macro controls (top), the nodes (side), the canvas (middle).
+
+![an image that describes the locations of the 3 major items.](../../../../../assets/screenshots/macros_panels-layout.png)
+
+### Macro Controls Section
+
+The controls allow for creation, deletion, editing, enabling, and selecting macros. The macros also store version history, so you can reset to an old state if you'd like.
+
+### Nodes Section
+
+The nodes section contains all the possible nodes that can be dropped into the canvas.
+
+Use the filter box to find something quickly.
+
+### Canvas Section
+
+## Triggers
+
+## Commands
+
+## Transformers
+
+
+---
+
+
+# Overview
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/overview
+
+The "Hello, and welcome!" page is your show-floor home base. It hosts a row of one-tap macro buttons. Tap a button, the macro fires.
+
+## Pin macros to the overview
+
+The pencil icon next to the button row opens the **Edit Macro Buttons** modal.
+
+1. Click the pencil icon.
+2. In **available macros**, click `+` next to each macro you want pinned.
+3. In **selected buttons**, drag rows to reorder, or click `X` to remove.
+4. Click **Save**.
+
+Build the macros themselves on the [Macros](/products/sndwrks-local/software/macros) page first — anything you create there shows up in **available macros**.
+
+
+---
+
+
+# Quick Setup
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/quick-setup
+
+You have a server. We think you may want to know how to get it cooking.
+
+We assume you didn't get into this industry to configure gear, so this guide is intentionally brief. After this, if you have more questions, navigate to the other pages that have deeper dives into each feature.
+
+This guide presumes that you've already done the [hardware setup](/products/sndwrks-local/server-hardware/quick-setup) and powered on.
+
+## Get the App Up
+
+We'll find the IP address of the server and open the UI in the browser.
+
+When you first connect the browser, you'll see a note about the certificate not being trusted. This is because we generate the certificates not a central authority so you can use the server without internet.
+
+Go ahead and tell the browser it's ok to trust the website.
+
+1. **Plug it in**<br/> Hook up `Port 8 (server)` or `Port 2 (smol)` either into your network or directly to a computer.
+2. **Find it on the network**<br/> There are two options: Link-local or DHCP.<br/>`Link Local`<br/>If you don't have DHCP or are plugged in directly, this port has a [link-local address](https://en.wikipedia.org/wiki/Link-local_address) assigned of `169.254.1.1`. If your computer doesn't have a link-local address, set one like `169.254.1.99`.<br/>`DHCP`<br/> If you're plugging into the network with DHCP, this port is defaulted to have DHCP enabled and it will (hopefully) an IP address. Use an IP scanner to find the server or look in your DHCP server to see the address.
+
+3. **Open the web app**<br/> Use the IP address from Step 2 (either the DHCP address or `169.254.1.1`) and type that into a browser. 
+4. **Celebrate?**<br/> You should see the homepage of the server website. If not, well heck. We'd recommend confirming your computer network settings, cabling, and the address in the browser. If you're still having trouble reach out on [Discord](https://discord.gg/tjPd6Q9A) or our [Contact page](https://www.sndwrks.xyz/contact).
+
+### Server Homepage
+
+This is close to what you should see. Your url will be different (`http://169.254.1.1` for example)
+
+![Homepage](../../../../../assets/screenshots/homepage.png)
+
+:::tip
+We recommend [Firefox](https://www.firefox.com/en-US/) for various reasons: great privacy, it doesn't use chromium, and it's open-source. 
+:::
+
+## IP Address Setup
+
+Now, let's get the server setup to talk to your network.
+
+We recommend that if you're using DHCP you reserve the IP Address in your DHCP server otherwise just set a static ip address.
+
+1. Navigate to the settings page
+2. Select the `Server` panel
+3. Select the interface you'd like to configure
+4. Add the network options that make sense: DHCP, VLANs etc.
+
+### Network Configuration Page
+
+![Network configuration page showing the interfaces and other parameters](../../../../../assets/screenshots/network-configuration.png)
+
+## Add a Device (or more)
+
+The devices feature is the core of the software. This is how the server knows what it can communicate with.
+
+There's two ways to add devices.
+
+1. Add manually. We recommend this path if you only want to add one or two devices now.
+2. Add from the network scanner. We recommend this path if you have lots of devices.
+
+  
+    
+      1. Navigate to the devices page
+      2. Click `+ New`
+      3. Fill out the bits
+      4. Hit `Enter` or click `Save`
+    
+    **New Device Page**
+    ![New device page showing device creation in progress](../../../../../assets/screenshots/new-device.png)
+  
+  
+    
+      1. Navigate to the utilities page
+      2. Select the `network` tab if not selected
+      3. Open the available networks page to add a subnet or add a network to scan
+      4. Select your scan speed (see the *disclaimer* about scan speeds there, please don't **Blast** a network that isn't yours. Ask [Cody Spencer](https://www.l-acoustics.com/theartofsound/journal/cody-spencer/) about that one time at the Ahmanson)
+      5. Run the scan
+      6. Select the subnet you'd like to add devices from if you scanned multiple
+      7. Click add devices.
+    
+      **New Device from Scan**
+      ![New device from network scan page showing adding a device in progress](../../../../../assets/screenshots/new-device-from-scan.png)
+  
+
+## Wrapping Up
+
+You did it! The server was setup. Hopefully, that was quick. Now you can take the devices you added and do stuff with them like add them to macros or the router.
+
+
+---
+
+
+# Router
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/router
+
+The Router feature contains two routers (message routing, sACN), and a message history tab.
+
+This allows the sending of messages from one destination to multiple sources with filters. The router crosspoints can be automated via the [OSC API](/reference/osc-api-v1/).
+
+Message history (messages tab) is an audit trail of *what happened*. 
+
+## Message routing
+
+![screenshot of the message router](../../../../../assets/screenshots/router_message-routing.png)
+
+The message router sends messages from sources to destinations. This is selectable via the routing matrix.
+
+### Route a message
+
+1. Click on the crosspoint you want to activate
+2. Check **Enabled**
+3. Optionally adjust the name and description. We autofill a name like `Qlab Backup In → HUD Out TCP`
+4. Add filters if you want them.
+5. Press `⏎` to save, or `esc` to discard, or click the buttons there.
+
+### Crosspoints
+
+This is the heart of the message router.
+
+The crosspoints have four states as indicated in the legend in the top left corner:
+
+- **No Crosspoint**: nothing happening here
+- **Crosspoint Off**: this crosspoint exists but is currently not routing anything
+- **Crosspoint On**: this crosspoint is actively routing
+- **Filters On**: this crosspoint is on AND it has filters
+
+Why do we have **No Crosspoint** and **Crosspoint Off**?
+
+**No crosspoint** should be used to indicate this path NEVER routes. **Crosspoint off** should be used to indicate this *may* route. For example, if you were doing a main/backup switch you'd have one route off and one route on, and you'd want to know you setup the off route.
+
+### Crosspoint Filters
+
+The crosspoint filters allow for only specified messages to be passed along a crosspoint. This is helpful to reduce traffic or only allow needed traffic. You can add multiple filters to further narrow down the subset of messages that are routed. The filters are executed in order.
+
+For example, you may have a lighting console on your network that is spitting out lots of information but you only want go's to end up at another destination.
+
+The filters have 6 options:
+
+- **Includes**: This allows any message that includes the filter pattern. Example: `Includes - 'cue'` would allow `/cue/12` `cuefast` `/a/very/long/address/with/cue` etc.
+- **Does Not Include**: The exact opposite of includes. If the filter pattern is anywhere in the message it won't be routed.
+- **Matches**: This is like includes but it is an exact match of the filter pattern.
+- **Does Not Match**: The opposite of matches.
+- **Starts With**: Allows messages that start with the filter pattern. Similar to includes but just a bit more specific.
+
+## sACN routing
+
+sACN routing is much like message routing. The main difference is it's network interface to network interface and doesn't allow for VLANs to be used.
+
+You can map sACN universes like `1 -> 2` or `1-3,5 -> 5,8,10,14`.
+
+![sacn mapping example](../../../../../assets/screenshots/router_sacn-universes.png)
+
+The sACN implementation in our server is compliant with ETC sACN.
+
+### Route sACN
+
+1. Click on the crosspoint you want to activate
+2. Check **Enabled**
+3. Optionally adjust the name and description. We autofill a name like `1 -> 2`
+4. Specify the universes you want to map
+5. Optionally, adjust the priority of the forwarded channels
+6. Press `⏎` to save, or `esc` to discard, or click the buttons there.
+
+## Messages
+
+This tab shows all the messages that have been received and sent by the server including [OSC API](/reference/osc-api-v1). The search bar will filter for anything in the messages including bits like OSC arguments.
+
+
+---
+
+
+# Settings
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/settings
+
+The settings page is split into three things: how to get help, power controls, and a stack of configuration accordions.
+
+## Support
+
+John's number is at the top of the page: **201.701.3155**. If something is wrong on a show, call.
+
+## Power
+
+- **Shutdown Server** — clean shutdown of the server process.
+- **Reboot Server** — restart the host.
+- **Shutdown Sensors** — power down haze watch sensors.
+- **Reset Sensors** — soft restart of the sensors.
+
+Always shut down sensors and the server before pulling power. Yanking the cord can corrupt the database.
+
+## Configuration
+
+Each accordion expands a focused settings panel.
+
+- **System Settings** — top-level system options.
+- **Chat Notification Settings** — sounds and mention behaviour for [Chat](/products/sndwrks-local/software/chat).
+- **Server Settings** — server-level tunables.
+- **Haze Watch Settings** — sampling and averaging windows for [Haze Watch](/products/sndwrks-local/software/haze-watch).
+- **Router Settings** — router defaults.
+- **sACN Settings** — sACN-specific options.
+- **Syslog Settings** — log level for [Utility → Syslog](/products/sndwrks-local/software/utility).
+
+
+---
+
+
+# Utility
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/utility
+
+The diagnostics drawer. Three tabs.
+
+## Network
+
+Click **Start Scan** to sweep the LAN for hosts. Handy when you're filling out IPs in [Devices](/products/sndwrks-local/software/devices) and want to confirm what's actually on the wire.
+
+## Events
+
+A scrolling log of things the server has done — connections opening, macros firing, devices changing state. Good first stop when something didn't behave as expected.
+
+## Syslog
+
+The server's syslog stream. Verbosity is set in [Settings → Syslog Settings](/products/sndwrks-local/software/settings).
+
+
+---
+
+
+# What is it?
+Source: https://docs.sndwrks.xyz/products/sndwrks-local/software/what-is-it
+
+## TLDR;
+
+The web app is mission control for the local server. It routes messages between gear, watches haze, fires macros, and gives you a single place to keep an eye on the show.
+
+## Where to start
+
+We'd recommend the [Quick Setup](../quick-setup)
+
+## Why the browser?
+
+We considered many options, but thought the browser was the best trade off. There's lots of computers on shows with browsers, and this way you can use any browser or OS you'd like.
+
+
+---
+
+
+# UDP vs TCP
+Source: https://docs.sndwrks.xyz/guides/udp-vs-tcp
+
+We'll dive into the differences between TCP and UDP.
+
+There are two major protocols in the transport layer of the [OSI Model](https://en.wikipedia.org/wiki/OSI_model): **TCP** and **UDP**. Nearly all show-control traffic (cue triggers, fader streams, OSC, PosiStageNet) rides on one of them.
+
+The choice between the two changes how your show behaves when something goes wrong on the network.
+
+## The Mail
+
+A simple analogy is sending a letter.
+
+**TCP is certified mail.** You hand the letter to the post office, they confirm they have it, and when it arrives the recipient signs for it. The signed receipt comes back to you. If the letter is lost somewhere along the way, the post office reissues it. There's more paperwork, it's a bit slower, but you *know* it landed.
+
+![TCP as certified mail: the letter goes out and a signed receipt comes back](../../../assets/udp-vs-tcp/tcp-mail.svg)
+
+**UDP is regular post.** You drop letters in the mailbox and walk away. Most of them arrive. Once in a while one doesn't, and you'll never find out which one. There's no signature, no receipt, no second attempt.
+
+![UDP as regular post: letters go out, one is lost in transit, no receipts ever come back](../../../assets/udp-vs-tcp/udp-mail.svg)
+
+That's the whole intuition. TCP trades speed for certainty. UDP trades certainty for speed.
+
+## In a show-control network
+
+That trade-off lands differently depending on what kind of message you're sending.
+
+**Use TCP when you must know it happened.** A single cue trigger from the stage manager's console to the server — `GO`, fire pyro, start a video — is one message that has to land. There's no follow-up packet coming along behind it carrying a fresher version. The few milliseconds of overhead from a handshake and an acknowledgement are nothing compared to the cost of a missed cue.
+
+![TCP show control: a single GO cue is sent and acknowledged](../../../assets/udp-vs-tcp/tcp-single-message.svg)
+
+**Use UDP when the next value supersedes the last.** A fader streaming its position to a server thirty or sixty times a second is the textbook case. If one packet drops on the way, the next one is already in flight carrying a more recent value. The receiver just keeps up — it doesn't even notice. Trying to retransmit a stale fader value would be worse than useless: you'd hear it lag.
+
+![UDP show control: a fader streams values, one packet drops, the receiver picks up with the next value](../../../assets/udp-vs-tcp/udp-fader-stream.svg)
+
+:::tip
+OSC almost always runs over UDP for exactly this reason — it's typically used for high-rate streams like fader and encoder values. See [Using Code to Send OSC](/guides/using-code-to-send-osc/) for examples.
+:::
+
+## A little deeper
+
+If you want to peek under the hood, the difference is really about what each protocol does *before* and *after* the data.
+
+**TCP is a conversation.** Before any data flows, the two machines do a three-way handshake. The client sends `SYN` ("I'd like to talk"), the server sends back `SYN-ACK` ("heard you, ready"), and the client replies `ACK` ("great, let's go"). Only then does the actual data start moving.
+
+![TCP three-way handshake: SYN, SYN-ACK, ACK, channel open](../../../assets/udp-vs-tcp/tcp-handshake.svg)
+
+Once the channel is open, every chunk of data is acknowledged. Lost chunks are detected and retransmitted. Chunks that arrive out of order are reassembled in order before they're handed to the application.
+
+![TCP retransmit: a packet is lost, the sender times out and resends, the retry is acknowledged](../../../assets/udp-vs-tcp/tcp-retransmit.svg)
+
+That reliability has a cost. The handshake adds a round trip before the first byte. Every packet adds a small amount of back-and-forth chatter. For a single cue this is invisible. For a continuous stream of fader values at 60 Hz, it's the difference between a console that feels live and one that feels glued down.
+
+**UDP is a postcard.** No handshake. No acknowledgement. No retransmission. No reordering. The sender just emits packets and the receiver takes whatever shows up, in whatever order. That's the whole protocol — and that minimalism is exactly why it wins for real-time streams.
+
+## Picking one
+
+A short cheat sheet:
+
+- Triggering something discrete that must happen exactly once → **TCP**
+- Streaming a continuously updating value where freshness beats completeness → **UDP**
+- OSC for cues, levels, encoders, position data → **UDP**, almost always
+- A query and response, or a single command that must land → **TCP** is usually fine
+
+
+---
+
+
+# Using Code to Send OSC
+Source: https://docs.sndwrks.xyz/guides/using-code-to-send-osc
+
+This guide will walk you through some examples on how to use python or javascript to send OSC. We at sndwrks obviously like code a bit and we wanted to share some simple examples.
+
+By then end of the guide, you'll have two working scripts in python and node.js that will allow you to send osc via the terminal anywhere you want. We find scripts like this extremely helpful for testing devices when we don't want to use a full tool like QLab or ETC EOS.
+
+**What will I be able to do: make Confetti with Python!**
+```python title="confetti.py"
+# pip3 install python-osc
+from pythonosc import udp_client
+
+server_ip = "10.0.10.100" # adjust to the server ip
+server_udp_port = 52000 # adjust to the network server udp listen port
+
+client = udp_client.SimpleUDPClient(server_ip, server_udp_port)
+client.send_message("/sndwrks/server/v1/confetti", [])
+
+# run it in terminal
+# python3 confetti.py
+```
+
+:::note
+This guide assumes you have a code editor and have basic Terminal skills like changing directories and running commands.
+
+If that's new to you, here's an opinionated prompt for an AI chat that may help:
+```
+I would like to get a setup guide for VS Code and some basic terminal instructions like changing directories and executing commands, so I can run some simple python 3.12 or node.js 24 code. The guide will cover installing python, pyenv, nvm and node 24. I just need to know how to get that far.
+```
+:::
+
+:::tip
+The examples below send OSC over UDP — that's the conventional transport for OSC. If you're new to why UDP and not TCP, see [UDP vs TCP](/guides/udp-vs-tcp/).
+:::
+
+## Setup
+
+To complete this guide, you'll need `python 3.12` and `node.js 24`. If you already know how to set those up, skip ahead. These instructions are for macOS with Terminal.
+
+:::tip
+There's lots of different ways to get node and python running. This is one way that keeps things tidy.
+:::
+
+### Install Python with pyenv
+
+[pyenv](https://github.com/pyenv/pyenv) lets you install and switch between Python versions without touching the system Python.
+
+1. Install pyenv with Homebrew:
+   ```bash
+   brew install pyenv
+   ```
+
+2. Add pyenv to your shell. Add these lines to `~/.zshrc`:
+   ```bash
+   export PYENV_ROOT="$HOME/.pyenv"
+   [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+   eval "$(pyenv init -)"
+   ```
+
+3. Restart your terminal, then install Python 3.12:
+   ```bash
+   pyenv install 3.12
+   pyenv global 3.12
+   ```
+
+4. Verify it worked:
+   ```bash
+   python --version
+   # Python 3.12.x
+   ```
+
+### Install Node.js with nvm
+
+[nvm](https://github.com/nvm-sh/nvm) does the same thing as pyenv but for Node.js.
+
+1. Install nvm with Homebrew:
+   ```bash
+   brew install nvm
+   ```
+
+2. Add nvm to your shell. Add these lines to `~/.zshrc`:
+   ```bash
+   export NVM_DIR="$HOME/.nvm"
+   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+   ```
+
+3. Restart your terminal, then install Node 24:
+   ```bash
+   nvm install 24
+   nvm use 24
+   ```
+
+4. Verify it worked:
+   ```bash
+   node --version
+   # v24.x.x
+   ```
+
+## Send with Python
+
+This script lets you send any OSC message from the command line. You pass in the server IP, port, OSC address, and any arguments.
+
+First, install the `python-osc` library:
+```bash
+pip install python-osc
+```
+
+Then create this script:
+```python title="send_osc.py"
+# the sys package allows us to read values when the file is ran
+import sys
+# this is the library that will actually format and send our osc
+from pythonosc import udp_client
+
+# if the file is executed without the proper arguments we should
+# let the user know and show them how to fix it.
+if len(sys.argv) < 4:
+    print("Usage: python send_osc.py <ip> <port> <address> [args...]")
+    print("Example: python send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/confetti")
+    sys.exit(1)
+
+# read the arguments inputted at runtime
+ip = sys.argv[1]
+port = int(sys.argv[2])
+address = sys.argv[3]
+args = sys.argv[4:]
+
+# initialize the client
+client = udp_client.SimpleUDPClient(ip, port)
+
+# now send our message
+client.send_message(address, args)
+
+# and lets show some feedback that we did that for the user
+print(f"Sent {address} {' '.join(args)} -> {ip}:{port}")
+```
+
+**Usage**
+
+Send confetti with no args:
+```bash
+python send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/confetti
+```
+
+Log a custom event with args:
+```bash
+python send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/event/custom "Pyro fired" "Stage left mortar"
+```
+
+## Send with Node.js
+
+Same idea, but in JavaScript using the [osc.js](https://github.com/colinbdclark/osc.js/) library.
+
+Set up a small project:
+```bash
+mkdir osc-sender && cd osc-sender
+npm init -y
+npm install osc
+```
+
+Then add `"type": "module"` to your `package.json` so you can use `import` syntax in `.js` files. It should look something like this:
+```json title="package.json" ins={3}
+{
+  "name": "osc-sender",
+  "type": "module",
+  "dependencies": {
+    "osc": "^2.4.5"
+  }
+}
+```
+
+Now create the script:
+```javascript title="sendOsc.js"
+// this is the library that will actually format and send our osc
+import osc from "osc";
+
+// process.argv contains the command line arguments
+// the first two are the node path and script path, so we skip them
+const args = process.argv.slice(2);
+
+// if the script is executed without the proper arguments we should
+// let the user know and show them how to fix it.
+if (args.length < 3) {
+  console.log("Usage: node sendOsc.js <ip> <port> <address> [args...]");
+  console.log("Example: node sendOsc.js 10.0.10.100 52000 /sndwrks/server/v1/confetti");
+  process.exit(1);
+}
+
+// read the arguments inputted at runtime
+const [ip, port, address, ...oscArgs] = args;
+
+// initialize a udp port pointed at our target server
+const udpPort = new osc.UDPPort({
+  localAddress: "0.0.0.0",
+  localPort: 0,
+  remoteAddress: ip,
+  remotePort: parseInt(port),
+});
+
+// once the port is ready, send our message and close it
+udpPort.on("ready", () => {
+  udpPort.send({
+    address: address,
+    args: oscArgs.map((a) => ({ type: "s", value: a })),
+  });
+
+  // and lets show some feedback that we did that for the user
+  console.log(`Sent ${address} ${oscArgs.join(" ")} -> ${ip}:${port}`);
+  udpPort.close();
+});
+
+// open the port which will trigger the "ready" event above
+udpPort.open();
+```
+
+**Usage**
+
+Send confetti with no args:
+```bash
+node sendOsc.js 10.0.10.100 52000 /sndwrks/server/v1/confetti
+```
+
+Broadcast a chat message:
+```bash
+node sendOsc.js 10.0.10.100 52000 /sndwrks/server/v1/chat/broadcast/send "Stage Manager" "Places please" "info"
+```
+
+## Practical Example
+
+Let's put one of these scripts to use. Say you want the sndwrks server to know when a Mac on your network has finished booting. We can create a `.command` file that runs on login and sends an OSC message automatically.
+
+A `.command` file is just a bash script that macOS knows how execute. This is pretty neat because you can add it to your Login Items so it runs every time you log in.
+
+### Create the script
+
+Create a file called `startup-completed.command` wherever you like. We'll use the Desktop for this example:
+
+```bash title="~/Desktop/startup-completed.command"
+#!/bin/bash
+
+# wait a bit for the network to come up
+sleep 10
+
+# send a custom event to the sndwrks server
+python ~/scripts/send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/event/custom "Mac Online" "Booth Mac finished booting"
+```
+
+Adjust the IP, port, and message to match your setup. This assumes you saved `send_osc.py` to `~/scripts/`. Update the path to wherever yours lives. You could use the Node.js script here too, just swap the command.
+
+### Make it executable
+
+macOS won't run it unless you mark it as executable:
+```bash
+chmod +x ~/Desktop/startup-completed.command
+```
+
+You can double-click it now to test. Terminal should open, wait 10 seconds, send the message.
+
+### Add to Login Items
+
+1. Open **System Settings** → **General** → **Login Items & Extensions**.
+2. Under **Open at Login**, click the **+** button.
+3. Navigate to your `startup-completed.command` file and add it. You can also just drag and drop your `.command` file into the startup items window if you want.
+
+Now every time this Mac logs in, it will send that OSC message to your server. Handy for knowing when all your machines are up and ready before a show.
+
+:::tip
+If you don't want the Terminal window hanging around after the script runs, add the following as the last line of the script. It'll close itself after sending.
+:::
+
+```bash title="~/Desktop/startup-completed.command" ins={8}
+#!/bin/bash
+
+# wait a bit for the network to come up
+sleep 10
+
+# send a custom event to the sndwrks server
+python ~/scripts/send_osc.py 10.0.10.100 52000 /sndwrks/server/v1/event/custom "Mac Online" "Booth Mac finished booting"
+osascript -e 'tell application "Terminal" to close front window' &
+```
+
+
+---
+
+
+# AI Acknowledgment
+Source: https://docs.sndwrks.xyz/reference/ai-disclaimer
+
+We leverage AI (mostly claude) to help us generate this documentation, and make sure it's current. We are a small team, and this helps us make sure we have comprehensive documentation.
+
+We don't let it generate critical documentation like setup guides, and a human always checks the documentation to the best of our ability for correctness, annoying ai language, and well human-readability.
+
+
+---
+
+
+# OSC API V1
+Source: https://docs.sndwrks.xyz/reference/osc-api-v1
+
+This is where you'll find the documentation on what OSC messages you can send to the server to control it. From shutdown to confetti.
+
+We use [uuids](https://en.wikipedia.org/wiki/Universally_unique_identifier) to identify resources on the server. These are unique across our systems. They are a bit long, but it makes sure the commands are unique to your show.
+
+:::note
+**Where'd OSC come from?**
+
+[Open Sound Control Specification](https://opensoundcontrol.stanford.edu/spec-1_0.html)
+:::
+
+1. Read the description about the command and its usage.
+2. See the Address and sometimes Args. We will put bits that you fill in like this: `<your-spicy-value>`. We also often provide ways to copy the properly formatted address right out of the website.
+3. There may be an example to show you how to use this in practice as well. Especially, if there's pieces you need to fill in.
+4. If it still isn't making sense, [join our discord](https://discord.gg/tjPd6Q9A) and let us know! You can also make your own adjustments to these docs via Github.
+
+## Supported OSC Types
+
+sndwrks local supports both UDP and TCP OSC. Our TCP OSC is [SLIP framed](https://en.wikipedia.org/wiki/Serial_Line_Internet_Protocol).
+
+## Global
+
+These commands are not specific to any server feature or function like routing or devices. The control the server itself or operate globally.
+
+### Confetti
+
+We admit it this one was for fun, but it can be practical too. It's useful to know that a control chain exists from and end device all the way to the browser with the server gui.
+
+Maybe snow will be next tied to your local weather?
+
+**Address**
+```
+/sndwrks/server/v1/confetti
+```
+
+### Ping
+
+The ping message will automatically respond with a `/sndwrks/server/v1/pong` message. Arguments can be supplied to set the response port and address. This can be helpful if you want to maintain an active loop between two devices.
+
+**Address & Args**
+```
+/sndwrks/server/v1/ping <response-port> <response-address>
+```
+**Examples**
+
+This would start `server-pong` in Qlab. This could be a simple heartbeat, but don't forget to have a script to restart it if you panic! 
+
+```
+/sndwrks/server/v1/ping 53000 /cue/server-pong/start
+```
+
+You could have a macro on EOS that is triggered by the pong response. Then, that parent macro could have a delay that fires a child macro. The child macro sends the ping back out. If you flash a dummy light on your magic sheet, you've created a heart beat. Now you know if you lose connection to the server.
+
+### E-Stop Engage
+
+This engages the e-stop if that wasn't clear. All routing, macros, and haze-watch functions will stop. Non-action oriented api commands will still work. Turning stuff on and off but not triggering a macro for example.
+
+**Address**
+```
+/sndwrks/server/v1/estop/engage
+```
+
+### E-Stop Disengage
+
+This, well, disengages the e-stop. All control functions will resume immediately. 
+
+**Address**
+```
+/sndwrks/server/v1/estop/disengage
+```
+
+:::note
+You can set the startup state of the e-stop in `Settings -> System Settings -> E-Stop Enabled on Start`
+:::
+
+## Devices
+
+These api functions control various parameters in the devices tab.
+
+### Sensor Shutdown
+
+This turns all connected sensors off. Please do this before you power off the server.
+
+**Address**
+```
+/sndwrks/server/v1/device/sensor/shutdown
+```
+:::caution
+The sensors are little computers. They are really tolerant of losing power, and we understand things happen. That being said, any time you can safely shutdown a sensor we really appreciate it. 
+:::
+
+### Single Sensor Shutdown
+
+Turns just one sensor off by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/device/sensor/<uuid>/shutdown
+```
+
+**Example**
+```
+/sndwrks/server/v1/device/sensor/019c53a3-e032-7b3b-88cd-02b2d361959a/shutdown
+```
+
+### Enable a Device
+
+This enables one device. This can be used to re-enable routing or macro functions.
+
+**Address**
+```
+/sndwrks/server/v1/device/<uuid>/on
+```
+
+**Example**
+```
+/sndwrks/server/v1/device/019c53a3-e032-7b3b-88cd-02b2d361959a/on
+```
+
+### Disable a Device
+
+This disables one device. This stops it from being used in any router functions or macros.
+
+**Address**
+```
+/sndwrks/server/v1/device/<uuid>/off
+```
+
+**Example**
+```
+/sndwrks/server/v1/device/019c53a3-e032-7b3b-88cd-02b2d361959a/off
+```
+
+## Router Crosspoints
+
+These commands let you enable and disable individual crosspoints in the router. A crosspoint is the connection between a source and a destination.
+
+### Enable a Crosspoint
+
+Turns a crosspoint on by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/router/crosspoint/<uuid>/on
+```
+
+**Example**
+```
+/sndwrks/server/v1/router/crosspoint/019c53a3-e032-7b3b-88cd-02b2d361959a/on
+```
+
+### Disable a Crosspoint
+
+Turns a crosspoint off by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/router/crosspoint/<uuid>/off
+```
+
+**Example**
+```
+/sndwrks/server/v1/router/crosspoint/019c53a3-e032-7b3b-88cd-02b2d361959a/off
+```
+
+## Events
+
+Event logging lets you mark moments in your show timeline. These are recorded in the event log and can be useful for post-show review or triggering other workflows.
+
+### Show Start
+
+Logs a show start event.
+
+**Address**
+```
+/sndwrks/server/v1/event/show-start
+```
+
+### Show End
+
+Logs a show end event.
+
+**Address**
+```
+/sndwrks/server/v1/event/show-end
+```
+
+### Show Break
+
+Logs a show break event. Intermission, anyone?
+
+**Address**
+```
+/sndwrks/server/v1/event/show-break
+```
+
+### Custom Event
+
+Logs a custom event with your own message and an optional detail string. If you don't provide a message it defaults to "Custom Event".
+
+**Address & Args**
+```
+/sndwrks/server/v1/event/custom <message> <detail>
+```
+
+**Example**
+```
+/sndwrks/server/v1/event/custom "Pyro fired" "Stage left mortar"
+```
+
+## Haze Watch Triggers
+
+These commands control individual haze watch triggers. Triggers monitor sensor readings and fire actions when a level threshold is crossed.
+
+### Enable a Trigger
+
+Enables a haze watch trigger by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/haze-watch/trigger/<uuid>/on
+```
+
+**Example**
+```
+/sndwrks/server/v1/haze-watch/trigger/019c53a3-e032-7b3b-88cd-02b2d361959a/on
+```
+
+### Disable a Trigger
+
+Disables a haze watch trigger by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/haze-watch/trigger/<uuid>/off
+```
+
+**Example**
+```
+/sndwrks/server/v1/haze-watch/trigger/019c53a3-e032-7b3b-88cd-02b2d361959a/off
+```
+
+### Set Trigger Level
+
+Sets the threshold level for a haze watch trigger. The value must be an integer between `0` and `1000`.
+
+**Address & Args**
+```
+/sndwrks/server/v1/haze-watch/trigger/<uuid>/trigger-level <level>
+```
+
+**Example**
+```
+/sndwrks/server/v1/haze-watch/trigger/019c53a3-e032-7b3b-88cd-02b2d361959a/trigger-level 500
+```
+
+:::note
+Values outside the 0–1000 range or non-integer values will be silently ignored.
+:::
+
+## Macros
+
+Macros bundle commands together so you can fire complex actions from a single message. You can also control individual triggers and commands within a macro.
+
+### Fire a Macro
+
+Executes a macro by its `uuid`. The macro must be enabled for this to do anything.
+
+**Address**
+```
+/sndwrks/server/v1/macros/<uuid>/fire
+```
+
+**Example**
+```
+/sndwrks/server/v1/macros/019c53a3-e032-7b3b-88cd-02b2d361959a/fire
+```
+
+### Enable a Macro
+
+Turns a macro on by its `uuid`.
+
+**Address**
+```
+/sndwrks/server/v1/macros/<uuid>/on
+```
+
+### Disable a Macro
+
+Turns a macro off by its `uuid`. A disabled macro won't fire even if triggered.
+
+**Address**
+```
+/sndwrks/server/v1/macros/<uuid>/off
+```
+
+### Enable a Macro Trigger
+
+Enables a specific trigger within a macro. Changes are persisted immediately.
+
+**Address**
+```
+/sndwrks/server/v1/macros/trigger/<uuid>/on
+```
+
+**Example**
+```
+/sndwrks/server/v1/macros/trigger/019c53a3-e032-7b3b-88cd-02b2d361959a/on
+```
+
+### Disable a Macro Trigger
+
+Disables a specific trigger within a macro. Changes are persisted immediately.
+
+**Address**
+```
+/sndwrks/server/v1/macros/trigger/<uuid>/off
+```
+
+### Enable a Macro Command
+
+Enables a specific command within a macro. Changes are persisted and synced to the UI in real time.
+
+**Address**
+```
+/sndwrks/server/v1/macros/command/<uuid>/on
+```
+
+### Disable a Macro Command
+
+Disables a specific command within a macro. Changes are persisted and synced to the UI in real time.
+
+**Address**
+```
+/sndwrks/server/v1/macros/command/<uuid>/off
+```
+
+## Chat
+
+Send messages into the sndwrks chat system over OSC. Handy for automation alerts, show caller notes, or just saying hi from your lighting console.
+
+### Broadcast Message
+
+Sends a message to all chat channels.
+
+**Address & Args**
+```
+/sndwrks/server/v1/chat/broadcast/send <sender-name> <message> <priority> <sender-uuid>
+```
+
+| Arg | Required | Default | Description |
+|---|---|---|---|
+| `sender-name` | No | `"OSC"` | Display name of the sender |
+| `message` | Yes | — | The message content |
+| `priority` | No | `"info"` | Priority level of the message |
+| `sender-uuid` | No | — | UUID of the sending device |
+
+**Example**
+```
+/sndwrks/server/v1/chat/broadcast/send "Stage Manager" "Places please" "info"
+```
+
+### Channel Message
+
+Sends a message to a specific chat channel by its `uuid`. Same arguments as broadcast.
+
+**Address & Args**
+```
+/sndwrks/server/v1/chat/<channel-uuid>/send <sender-name> <message> <priority> <sender-uuid>
+```
+
+**Example**
+```
+/sndwrks/server/v1/chat/019c53a3-e032-7b3b-88cd-02b2d361959a/send "Lighting" "Standby LX Q1" "info"
+```
+
+### Clear Channel Alert
+
+Clears the alert indicator on a specific chat channel.
+
+**Address**
+```
+/sndwrks/server/v1/chat/<channel-uuid>/clear-alert
+```
+
+**Example**
+```
+/sndwrks/server/v1/chat/019c53a3-e032-7b3b-88cd-02b2d361959a/clear-alert
+```

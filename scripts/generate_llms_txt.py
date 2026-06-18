@@ -28,7 +28,9 @@ def load_dotenv():
 
 DOCS_ROOT = Path("src/content/docs")
 OUTPUT_PATH = Path("public/llms.txt")
-EXCLUDED_FILES = {"reference/z_doc-style.mdx"}
+FULL_OUTPUT_PATH = Path("public/llms-full.txt")
+EXCLUDED_FILES = {"reference/doc-style.mdx"}
+TOKEN_BUDGET = 50_000
 
 SIDEBAR_SECTIONS = ["Products", "Guides", "Reference"]
 
@@ -141,6 +143,66 @@ def build_prompt(docs: list[dict], site_url: str) -> str:
 - Do not include the excluded internal style guide page"""
 
 
+def clean_mdx(content: str) -> str:
+    """Strip frontmatter, imports, and Starlight JSX tags, leaving readable markdown.
+
+    Fenced code blocks are left untouched so doc code examples (which may contain
+    their own `import` statements) are preserved verbatim.
+    """
+    # Remove leading YAML frontmatter block.
+    content = re.sub(r"^---\s*\n.*?\n---\s*\n", "", content, count=1, flags=re.DOTALL)
+
+    # Split out fenced code blocks; odd indices are the fenced segments to preserve.
+    segments = re.split(r"(```.*?```)", content, flags=re.DOTALL)
+    for i in range(0, len(segments), 2):
+        seg = segments[i]
+        # Drop MDX `import ... from '...';` statements (may span multiple lines).
+        seg = re.sub(
+            r"^import\b[\s\S]*?\bfrom\s+['\"][^'\"]+['\"];?[ \t]*\n?",
+            "",
+            seg,
+            flags=re.MULTILINE,
+        )
+        # Remove JSX component tags (opening, closing, self-closing; may span lines),
+        # keeping any markdown content they wrap.
+        seg = re.sub(r"</?[A-Z][A-Za-z0-9]*(?:\s[^>]*?)?/?>", "", seg)
+        segments[i] = seg
+
+    cleaned = "".join(segments)
+    # Collapse runs of 3+ newlines down to a single blank line.
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
+
+
+def build_llms_full(docs: list[dict], site_url: str) -> str:
+    """Build the full-content llms-full.txt with every doc's cleaned markdown."""
+    section_order = {name: i for i, name in enumerate(SIDEBAR_SECTIONS)}
+
+    def sort_key(doc: dict) -> tuple:
+        # Root/index first, then by sidebar section order, then by URL path.
+        is_root = 0 if doc["url_path"] == "" else 1
+        sec_rank = section_order.get(doc["section"], len(SIDEBAR_SECTIONS))
+        return (is_root, sec_rank, doc["url_path"])
+
+    parts = [
+        "# sndwrks",
+        "",
+        "> Complete documentation for the sndwrks live entertainment command center — "
+        "setup guides, product information, and API reference for controlling your show.",
+        "",
+        "This file contains the full content of every documentation page, concatenated "
+        "for LLM ingestion.",
+    ]
+
+    for doc in sorted(docs, key=sort_key):
+        url = f"{site_url}/{doc['url_path']}".rstrip("/")
+        body = clean_mdx(doc["content"])
+        parts.append("\n\n---\n\n")
+        parts.append(f"# {doc['title']}\nSource: {url}\n\n{body}")
+
+    return "\n".join(parts)
+
+
 def main():
     load_dotenv()
 
@@ -165,7 +227,7 @@ def main():
 
     print("Calling Anthropic API to generate llms.txt...")
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-6",
         max_tokens=4096,
         temperature=0,
         system="You generate llms.txt files following the llmstxt.org specification. Output raw Markdown only, no code fences or surrounding explanation.",
@@ -177,6 +239,29 @@ def main():
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(llms_txt + "\n", encoding="utf-8")
     print(f"Written to {OUTPUT_PATH}")
+
+    print("Building llms-full.txt from documentation content...")
+    llms_full = build_llms_full(docs, site_url)
+
+    try:
+        token_count = client.messages.count_tokens(
+            model="claude-sonnet-4-6",
+            messages=[{"role": "user", "content": llms_full}],
+        ).input_tokens
+        if token_count > TOKEN_BUDGET:
+            print(
+                f"Warning: llms-full.txt is {token_count} tokens, "
+                f"over the {TOKEN_BUDGET} budget.",
+                file=sys.stderr,
+            )
+        else:
+            print(f"llms-full.txt is {token_count} tokens (budget {TOKEN_BUDGET}).")
+    except anthropic.AnthropicError as e:
+        print(f"Warning: could not count tokens for llms-full.txt: {e}", file=sys.stderr)
+
+    FULL_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    FULL_OUTPUT_PATH.write_text(llms_full + "\n", encoding="utf-8")
+    print(f"Written to {FULL_OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

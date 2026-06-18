@@ -1,6 +1,8 @@
 ---
 title: Documentation Style
 description: Add info the sndwrks way.
+sidebar:
+  order: 3
 ---
 
 import { Card, Steps, Icon } from '@astrojs/starlight/components';
@@ -9,7 +11,9 @@ Here's a collection of styles. And musings
 
 ## Writing Style
 
-We prefer enough information, but not superfluous information. Overly verbose docs lead to folks not digesting the information due to context overload. Don't use asides too much as an example. We also prefer that the docs are human written. Yes, you can probably whip something out real quick like via Ai, but we think it misses the human aspect then. We generate an llm.txt on push.
+We prefer enough information, but not superfluous information. Overly verbose docs lead to folks not digesting the information due to context overload. Don't use asides too much as an example.
+
+We also prefer that the docs are human written. Yes, you can probably whip something out real quick like via Ai, but we think it misses the human aspect then. We do think that AI can be helpful to generate a new doc page or section, but not actually write the content.
 
 ## File
 
@@ -39,5 +43,3 @@ Use an icon after headings to help separate the sections.
 <Icon name="star" />
 ```
 
-## Code and API
-<Icon name="rocket" />

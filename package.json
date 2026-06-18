@@ -10,10 +10,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.37.6",
-    "astro": "^5.6.1",
-    "astro-expressive-code": "^0.41.6",
+    "@astrojs/starlight": "^0.40.0",
+    "astro": "^6.4.7",
+    "astro-expressive-code": "^0.43.1",
     "sharp": "^0.34.2",
+    "starlight-image-zoom": "^0.14.2",
     "starlight-theme-flexoki": "^0.2.2"
   }
 }

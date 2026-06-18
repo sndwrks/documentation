@@ -1,0 +1,106 @@
+---
+title: Devices
+description: Add the things you talk to.
+sidebar:
+  order: 5
+---
+
+import { Steps, Icon, Aside } from '@astrojs/starlight/components';
+
+A **device** is anything the server talks to over the network: consoles, processors, video routers, sensors, or another sndwrks product.
+
+Devices are the building blocks for everything else: routing, macros, and haze watch all reference them.
+
+We are consistently adding new device types, if there's something you want to control tell us! 
+
+## Add a device
+<Icon name="star" />
+
+There's three ways to add devices: manually, via network scan, or by sending a message to the server. We will show the manual process here.
+
+
+
+<Steps>
+
+1. Open **Devices** and click **New**. An inline editor opens on the right.
+2. Click the heading to rename, click the description to edit. We find it's helpful to add **In** or **Out** to the name to indicate the direction of the device.
+3. Pick a **Device Type**. `Network` and `Sensor` are the generic types; the rest are specific device integrations (e.g. `dnb-audiotechnik_aes70-oca`, `lacoustics_la4x`, `blackmagic_videohub`, `adderlink_x-dip`).
+4. Set **IP Address** and **Port** or other depending on the integrations. For example, the d&b port is automatically set.
+5. Set **Direction** (incoming, outgoing, or both — depending on the integration).
+6. Check **Router** if you want this device to appear as a row or column in the routing matrix.
+7. Check **Enabled** if you want the device to start working immediately.
+8. Optionally select **Transport Type/Message Type** if you checked **Router**.
+9. Press `⏎` to save, or `esc` to discard, or click the buttons there.
+
+</Steps>
+
+    **New Device Page**
+    ![New device page showing device creation in progress](../../../../../assets/screenshots/new-device.png)
+
+### Options
+<Icon name="star" />
+
+There are various options to define how you'd like your device to behave.
+
+If a device was added by sending a message to the server, these bits will be automatically filled out based on what the server was able to detect.
+
+#### Enabled
+<Icon name="star" />
+
+This turns the device on. This can be controlled via the [OSC API](/reference/osc-api-v1/#enable-a-device).
+
+If a device is disabled, only OSC API commands from this device will work, every other function associated with the device (router, macros, etc) will not function.
+
+#### Ignore port
+<Icon name="star" />
+
+Ignore port allows for incoming connections that send on multiple ports (like Qlab). Enabling this option will only check the IP address for a connection type and transport.
+
+So, if you're sending Qlab on TCP, you'd enable this, but you could send in on UDP from that same IP and that would be a different device.
+
+#### Router
+<Icon name="star" />
+
+This exposes the device in the router matrix allowing for message routing for this device. The direction exposes it as an input (incoming), output (outgoing) or both (bi-directional).
+
+Selecting `Router` exposes some more options for a device.
+
+#### Direction
+<Icon name="star" />
+
+This option is exposed after `Router` is selected. It selects how this device should behave.
+
+For example, a console sending udp on a specific port would be incoming, but that same console would be another device as outgoing to send to the console. A TCP device could be bidirectional if you want to use the same connection to send and receive data. 
+
+#### Transport Type
+<Icon name="star" />
+
+Transport Type selects which network transport to use: UDP or TCP.
+
+<Aside type="tip" icon="information">
+We recommend that you use TCP for show critical single messages like a `GO`. We recommend that you use UDP for messages that come in rapid fire like faders or tracking information.
+
+Do you want to learn more about UDP vs TCP? [Read our guide](/guides/udp-vs-tcp)
+</Aside>
+
+#### Message Type
+<Icon name="star" />
+
+This selects the message type you'd expect the device to send or receive. The server will do it's best to dynamically identify the type, but this allows for eager parsing.
+
+We like eager parsing because it allows us to lower the latency, which we think is important in live environments.
+
+## Deleting a device
+<Icon name="star" />
+
+You may not want a device to stay forever. Well, we have a unique solution to that: the Delete Button! Wow!
+
+Click on the `X` on the device item in the list and it will show a confirmation modal. Then confirm that and it's gone! As a note, we do NOT have undo so this is a permanent action. Give us a call if you need something restored.
+
+## Connection state
+<Icon name="star" />
+
+Each device card shows its live state: `disconnected`, `connecting`, or `connected`.
+
+As a note, this will only stay connected if the server can maintain a persistent connection to the device in question. UDP for example is inherently stateless, so it will never say connected or may momentarily say it's connected.
+
