@@ -17,17 +17,17 @@ clarifying a step, or adding a missing detail - are welcome.
 
 ## Licensing of contributions
 
-The documentation content in this repository is proprietary to sndwrks (see
-[`LICENSE`](LICENSE)). The code is licensed under MIT.
+The documentation content in this repository is proprietary to sndwrks Inc
+(see [`LICENSE`](LICENSE)). The code is licensed under MIT.
 
 By submitting a contribution (a pull request, patch, or other change), you
 agree that:
 
 - You have the right to submit the contribution.
-- You assign to sndwrks all rights, title, and interest in your contribution
-  to the **documentation content**, so that sndwrks can use, modify, publish,
-  and relicense it as part of the documentation. (You retain the right to be
-  credited.)
+- You assign to sndwrks Inc all rights, title, and interest in your
+  contribution to the **documentation content**, so that sndwrks Inc can use,
+  modify, publish, and relicense it as part of the documentation. (You retain
+  the right to be credited.)
 - Any contribution to the **code** is provided under the MIT License.
 
 If you can't agree to these terms for a particular change, open an issue

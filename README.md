@@ -15,5 +15,5 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for how, and how contributions are lice
 
 See [`LICENSE`](LICENSE) for details:
 
-- **Documentation content** (prose, images, diagrams) — © sndwrks, all rights reserved. Public to read and contribute to, but not licensed for reuse.
+- **Documentation content** (prose, images, diagrams) — © sndwrks Inc, all rights reserved. Public to read and contribute to, but not licensed for reuse.
 - **Code** (config, build scripts, tooling) — [MIT](https://opensource.org/licenses/MIT)
