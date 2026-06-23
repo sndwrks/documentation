@@ -16,7 +16,7 @@ export default defineConfig({
     }), starlight({
         title: 'documentation',
         routeMiddleware: './src/routeData.ts',
-        social: [{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/tjPd6Q9A' },{ icon: 'github', label: 'GitHub', href: 'https://github.com/sndwrks/documentation' }],
+        social: [{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/7ZcP5v5kBA' },{ icon: 'github', label: 'GitHub', href: 'https://github.com/sndwrks/documentation' }],
   logo: {
     src: './src/assets/sndwrks-logo.svg'
   },
