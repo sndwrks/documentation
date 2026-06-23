@@ -35,4 +35,4 @@ instead and we'll find another way to incorporate the feedback.
 
 ## Questions
 
-Reach us on [Discord](https://discord.gg/tjPd6Q9A) or at info@sndwrks.xyz.
+Reach us on [Discord](https://discord.gg/7ZcP5v5kBA) or at info@sndwrks.xyz.
