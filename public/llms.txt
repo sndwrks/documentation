@@ -1,36 +1,36 @@
 # sndwrks
 
-> sndwrks is a live entertainment command center platform combining server hardware and software to route show-control messages, monitor atmospherics, fire macros, and coordinate all departments from a single browser-based interface.
+> sndwrks is a live entertainment command center platform combining server hardware and software to route show-control messages, monitor atmospherics, fire macros, and coordinate departments over a unified network.
 
-sndwrks local is the on-site product: a physical server with a web app that handles OSC routing, sACN, haze watch, macros, chat, and more. It communicates with consoles, processors, sensors, and other devices over the network using OSC, TCP, UDP, and sACN.
+sndwrks local is the core product: a physical server that sits at the center of your show network, paired with a browser-based web app for configuration and control. It supports OSC (UDP and TCP), sACN, message routing, haze watch, macros, chat, and a full OSC API for programmatic control.
 
-[Welcome](https://docs.sndwrks.com/): Complete documentation home for sndwrks — links to hardware quick start, software quick start, products, guides, and reference.
+[Welcome](https://docs.sndwrks.com/): Complete documentation home page with quick links to hardware setup, software setup, products, guides, and reference.
 
 ## Products
 
-- [Overview](https://docs.sndwrks.com/products/overview): Entry point for all sndwrks products with links to hardware and software quick starts and sndwrks local documentation.
-- [sndwrks local](https://docs.sndwrks.com/products/sndwrks-local/home): Overview of the sndwrks local server product — the on-site hardware and software that runs your show.
-- [Server Hardware: Getting Started](https://docs.sndwrks.com/products/sndwrks-local/server-hardware/getting-started): Home page for all server hardware documentation with links to what it is and quick setup.
-- [Server Hardware: What is it?](https://docs.sndwrks.com/products/sndwrks-local/server-hardware/what-is-it): Describes the physical server hardware — its role at the center of a show, port types (power, network, peripherals), redundant PSUs, and network port details for both server and smol variants.
-- [Server Hardware: Quick Setup](https://docs.sndwrks.com/products/sndwrks-local/server-hardware/quick-setup): Step-by-step unboxing, inspection, and power-on instructions for both the server and smol hardware variants.
-- [Software: Getting Started](https://docs.sndwrks.com/products/sndwrks-local/software/getting-started): Index page for the sndwrks local web app with links to all major software sections.
-- [Software: What is it?](https://docs.sndwrks.com/products/sndwrks-local/software/what-is-it): High-level description of the browser-based web app — mission control for routing, haze watch, macros, and show monitoring.
-- [Software: Quick Setup](https://docs.sndwrks.com/products/sndwrks-local/software/quick-setup): Guide to getting the server web app running — finding the IP, opening the UI, configuring network settings, and adding devices for the first time.
-- [Software: Overview](https://docs.sndwrks.com/products/sndwrks-local/software/overview): The show-floor home page of the web app featuring one-tap macro shortcut buttons and instructions for pinning macros to the overview.
-- [Software: Devices](https://docs.sndwrks.com/products/sndwrks-local/software/devices): How to add and manage devices (consoles, processors, sensors, etc.) that the server communicates with — the building blocks for routing, macros, and haze watch.
-- [Software: Router](https://docs.sndwrks.com/products/sndwrks-local/software/router): Message routing and sACN routing via a crosspoint matrix, including crosspoint filters, sACN universe mapping, and a full message history audit trail.
-- [Software: Macros](https://docs.sndwrks.com/products/sndwrks-local/software/macros): Node-based composable show actions combining triggers (OSC, sACN, wall clock, server events), commands (OSC, TCP, UDP, HTTP, email, device integrations), and transformers (delay, rate limit).
-- [Software: Haze Watch](https://docs.sndwrks.com/products/sndwrks-local/software/haze-watch): Monitors PM2.5 particulate, temperature, humidity, and CO₂ from sensors and fires OSC commands via configurable triggers to maintain consistent atmospheric levels.
-- [Software: Chat](https://docs.sndwrks.com/products/sndwrks-local/software/chat): Simple show-floor chat for the production team, currently in preview, with per-browser notification settings.
-- [Software: Utility](https://docs.sndwrks.com/products/sndwrks-local/software/utility): Built-in network scanner, event log, and syslog viewer for troubleshooting and show diagnostics.
-- [Software: Settings](https://docs.sndwrks.com/products/sndwrks-local/software/settings): All server configuration — power/reset controls, show information, e-stop, network settings, router ports, sACN, syslog, chat notifications, and backup/restore.
+- [Overview](https://docs.sndwrks.com/products/overview): Entry point for all product documentation with links to hardware and software quick starts.
+- [sndwrks local](https://docs.sndwrks.com/products/sndwrks-local/home): Overview of the sndwrks local server product covering both hardware and software components.
+- [Server Hardware: Getting Started](https://docs.sndwrks.com/products/sndwrks-local/server-hardware/getting-started): Home page for server hardware documentation linking to what it is and quick setup.
+- [Server Hardware: What is it?](https://docs.sndwrks.com/products/sndwrks-local/server-hardware/what-is-it): Describes the physical server, its role at the center of a show network, port types (power, network, peripherals), and redundancy recommendations.
+- [Server Hardware: Quick Setup](https://docs.sndwrks.com/products/sndwrks-local/server-hardware/quick-setup): Step-by-step unboxing, inspection, and power-on instructions for both the server and server smol hardware variants.
+- [Software: Getting Started](https://docs.sndwrks.com/products/sndwrks-local/software/getting-started): Index page linking to all software documentation sections including devices, router, macros, haze watch, chat, utility, and settings.
+- [Software: What is it?](https://docs.sndwrks.com/products/sndwrks-local/software/what-is-it): High-level description of the browser-based web app and why a browser interface was chosen for show environments.
+- [Software: Quick Setup](https://docs.sndwrks.com/products/sndwrks-local/software/quick-setup): Guided walkthrough to get the server app running in a browser, configure an IP address, and add the first devices to the system.
+- [Software: Overview](https://docs.sndwrks.com/products/sndwrks-local/software/overview): Documents the show-floor home page and how to pin macro shortcut buttons for one-tap firing.
+- [Software: Devices](https://docs.sndwrks.com/products/sndwrks-local/software/devices): Explains how to add, configure, enable, and delete network devices (consoles, processors, sensors, etc.) that serve as building blocks for routing, macros, and haze watch.
+- [Software: Router](https://docs.sndwrks.com/products/sndwrks-local/software/router): Documents the message router and sACN router, including crosspoint configuration, filters, universe mapping, and message history audit trail.
+- [Software: Macros](https://docs.sndwrks.com/products/sndwrks-local/software/macros): Covers the node-based macro system including triggers (OSC, sACN, server event, wall clock), commands (device, OSC, TCP, UDP, HTTP, email, system), and transformers (delay, rate limit).
+- [Software: Haze Watch](https://docs.sndwrks.com/products/sndwrks-local/software/haze-watch): Documents atmospheric monitoring using particulate, temperature, humidity, and CO₂ sensors, with trigger and command setup for automated haze control via OSC.
+- [Software: Chat](https://docs.sndwrks.com/products/sndwrks-local/software/chat): Describes the show-team chat feature currently in preview, including sign-in and notification settings.
+- [Software: Utility](https://docs.sndwrks.com/products/sndwrks-local/software/utility): Covers the built-in network scanner, event log, and syslog viewer for troubleshooting and device discovery.
+- [Software: Settings](https://docs.sndwrks.com/products/sndwrks-local/software/settings): Documents all server configuration options including power controls, network settings, e-stop, double-message protection, sACN, syslog, chat notifications, and backup/restore.
 
 ## Guides
 
-- [Using Code to Send OSC](https://docs.sndwrks.com/guides/using-code-to-send-osc): Walkthrough for sending OSC messages programmatically using Python (python-osc) and Node.js (osc.js), including a practical example of triggering a server event on Mac login.
-- [UDP vs TCP](https://docs.sndwrks.com/guides/udp-vs-tcp): Explains the difference between UDP and TCP transport protocols in the context of show control — when to use each, how the TCP handshake works, and why OSC typically runs over UDP.
+- [Using Code to Send OSC](https://docs.sndwrks.com/guides/using-code-to-send-osc): Practical guide with working Python and Node.js scripts for sending OSC messages from the terminal, including setup with pyenv and nvm, and a real-world login-item automation example.
+- [UDP vs TCP](https://docs.sndwrks.com/guides/udp-vs-tcp): Explains the difference between UDP and TCP transport protocols, when to use each in show-control contexts, and how the TCP handshake and retransmission work under the hood.
 
 ## Reference
 
-- [OSC API V1](https://docs.sndwrks.com/reference/osc-api-v1): Complete reference for all OSC commands accepted by sndwrks local — covers global controls (confetti, ping, e-stop), devices, router crosspoints, event logging, haze watch triggers, macros, and chat messaging.
-- [AI Statement](https://docs.sndwrks.com/reference/ai-statement): Describes how sndwrks uses AI (primarily Claude) to assist with documentation generation, proofreading, and keeping content current, with human review for accuracy.
+- [OSC API V1](https://docs.sndwrks.com/reference/osc-api-v1): Complete OSC command reference for sndwrks local covering global commands (confetti, ping, e-stop), devices, router crosspoints, events, haze watch triggers, macros, and chat messaging.
+- [AI Statement](https://docs.sndwrks.com/reference/ai-statement): Describes how sndwrks uses AI (primarily Claude) to assist with documentation generation and proofreading, with notes on human review practices.
