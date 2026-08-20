@@ -1,9 +1,725 @@
-/* .main-pane {
-  border-left: 1px solid var(--sl-color-green);
-  border-right: 1px solid var(--sl-color-green);
-  padding: 0;
-} */
+/**
+ * sndwrks design language for docs.sndwrks.com
+ *
+ * Ported from the shared sndwrks token system
+ * (sndwrks-cloud/cloud-ui/src/styles/tokens.css).
+ * House style: 1px solid borders, zero border-radius, purple-tinted surfaces,
+ * violet accent, 1rem panel padding, bordered panels with 1rem gaps.
+ *
+ * This file is unlayered, so it wins over flexoki (@layer flexoki) and
+ * Starlight (@layer starlight.*) regardless of specificity.
+ */
 
-/* header.header {
-  border-bottom: 1px solid var(--sl-color-green-low);
-} */
+/* ------------------------------------------------------------------ */
+/* 1. Primitives                                                       */
+/* ------------------------------------------------------------------ */
+
+:root,
+::backdrop {
+	/* purple-tinted grey ramp — B > R > G at hue ≈ 273–280°, channel spread
+	   peaking mid-ramp (mirrors the warm ramp's construction, hue-flipped) */
+	--color-grey-50: #f9f5fb;
+	--color-grey-100: #e9e4ed;
+	--color-grey-200: #d9d1de;
+	--color-grey-300: #c6bccd;
+	--color-grey-400: #aea2b6;
+	--color-grey-500: #9a8da3;
+	--color-grey-600: #8c8590;
+	--color-grey-700: #6a636f;
+	--color-grey-800: #49444d;
+	--color-grey-900: #28242b;
+	--color-grey-950: #151018;
+	--color-surface-white: #ffffff;
+
+	/* brand */
+	--color-brand-purple: #8b5cf6;
+	--color-brand-purple-light: #a78bfa;
+	--color-brand-lime: #c2f280;
+	/* lime carries no contrast on a white canvas — light-theme counterpart */
+	--color-brand-lime-dark: #74a51e;
+
+	/* status — warn is AA-darkened per tokens.css (#d92d31, not #f94144) */
+	--color-good: #90be6d;
+	--color-warn: #d92d31;
+	--color-caution: #f9c74f;
+	--color-info: #277da1;
+
+	/* house knobs */
+	--border-width: 1px;
+	--border: var(--border-width) solid var(--color-rule);
+	--border-strong: var(--border-width) solid var(--color-rule-strong);
+	--radius: 0;
+	--pad: 1rem;
+	/* panel inner padding: generous on wide screens, 1rem floor */
+	--sw-section-pad-x: clamp(var(--pad), 3vw, 2.5rem);
+	--sw-section-pad-y: 1.25rem;
+	--sw-footer-height: 2.5rem;
+	/* width reserved on non-current nav links to pre-pay the bold delta the
+	   current-page link adds — keeps the fit-content sidebar from resizing.
+	   Must EQUAL that delta, not merely cover it: too much and the pane shrinks
+	   when the longest label is the current page. Measured at 0.354em (4.95px at
+	   the 14px --sl-text-sm) on the longest label, "ATEM SuperSource Preview";
+	   em so it tracks the nav font size. Re-measure if a longer label appears —
+	   see the sweep in the pane rule below. */
+	--sw-nav-bold-slack: 0.354em;
+	/* THE knob: fixed max measure of the article text. 48rem ≈ 68ch of the
+	   article font at its typical ~18.8px size (68 × 0.604 '0'-glyph widths).
+	   Deliberately NOT derived from the fluid flexoki text base so the pane
+	   width never shifts with the viewport's font scaling */
+	--sw-text-width: 48rem;
+	/* pane = one panel's outer width: text measure + the panel's own padding */
+	--sw-pane-width: calc(var(--sw-text-width) + 2 * var(--sw-section-pad-x));
+}
+
+/* ------------------------------------------------------------------ */
+/* 2. Semantic aliases — dark is Starlight's default (:root)           */
+/* ------------------------------------------------------------------ */
+
+:root,
+::backdrop {
+	/* the lighter tone is the whole canvas — no surface fills */
+	--color-bg: var(--color-grey-900);
+	--color-surface: var(--color-grey-900);
+	--color-surface-raised: #1e1a24;
+	--color-surface-sunken: #0f0c13;
+	--color-text: var(--color-grey-100);
+	--color-text-soft: var(--color-grey-300);
+	--color-muted: var(--color-grey-500);
+	--color-rule: var(--color-grey-800);
+	--color-rule-strong: var(--color-grey-700);
+	--color-accent: var(--color-brand-purple);
+	/* #8b5cf6 on the grey-900 canvas is only ~3.6:1 — accent FILLS are fine,
+	   but accent-as-text needs the lighter violet (#a78bfa ≈ 5.6:1) */
+	--color-accent-text: var(--color-brand-purple-light);
+	/* sparse highlight dots in the landing globe */
+	--sw-globe-accent: var(--color-brand-lime);
+	--color-selected: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+	--color-hover: color-mix(in srgb, var(--color-grey-800) 50%, var(--color-grey-900));
+}
+
+:root[data-theme='light'],
+[data-theme='light'] ::backdrop {
+	/* the lighter tone is the whole canvas — no surface fills */
+	--color-bg: var(--color-surface-white);
+	--color-surface: var(--color-surface-white);
+	--color-surface-raised: var(--color-surface-white);
+	--color-surface-sunken: var(--color-grey-50);
+	--color-text: var(--color-grey-950);
+	--color-text-soft: var(--color-grey-800);
+	--color-muted: var(--color-grey-600);
+	/* border tone kept close to the text tone */
+	--color-rule: var(--color-grey-600);
+	--color-rule-strong: var(--color-grey-700);
+	--color-accent: var(--color-brand-purple);
+	/* deeper violet — the brand #8b5cf6 as small text on white is ~3.9:1 */
+	--color-accent-text: #6d28d9;
+	--sw-globe-accent: var(--color-brand-lime-dark);
+	--color-selected: rgb(139 92 246 / 0.2);
+	--color-hover: color-mix(in srgb, var(--color-grey-200) 50%, var(--color-surface-white));
+}
+
+/* ------------------------------------------------------------------ */
+/* 3. Bridge onto Starlight's --sl-color-* system                      */
+/* ------------------------------------------------------------------ */
+
+:root,
+::backdrop {
+	/* the content column must span a panel's outer box; the panel's own
+	   padding brings the text back to the --sw-text-cols measure */
+	--sl-content-width: var(--sw-pane-width);
+	/* top nav: 1rem padding on every side; height = tallest content (~2.5rem)
+	   + the padding, since the fixed-layout offsets all key off this var */
+	--sl-nav-pad-x: var(--pad);
+	--sl-nav-pad-y: var(--pad);
+	--sl-nav-height: 4.5rem;
+	--sl-color-text: var(--color-text-soft);
+	--sl-color-text-accent: var(--color-accent-text);
+	--sl-color-bg: var(--color-bg);
+	--sl-color-bg-nav: var(--color-bg);
+	--sl-color-bg-sidebar: var(--color-bg);
+	--sl-color-bg-inline-code: var(--color-surface-sunken);
+	--sl-color-bg-accent: var(--color-accent);
+	--sl-color-accent: var(--color-brand-purple);
+	--sl-color-hairline-light: var(--color-rule);
+	--sl-color-hairline: var(--color-rule);
+	--sl-color-hairline-shade: var(--color-rule);
+
+	/* neutralize flexoki's emboss shadows */
+	--sl-flexoki-emboss-shadow: none;
+	--sl-flexoki-shadow-shade: var(--color-rule);
+
+	/* dark greys */
+	--sl-color-white: var(--color-grey-100);
+	--sl-color-gray-1: var(--color-grey-200);
+	--sl-color-gray-2: var(--color-grey-300);
+	--sl-color-gray-3: var(--color-grey-500);
+	--sl-color-gray-4: var(--color-grey-700);
+	--sl-color-gray-5: var(--color-grey-800);
+	--sl-color-gray-6: var(--color-grey-900);
+	--sl-color-gray-7: #1e1a24;
+	--sl-color-black: var(--color-grey-950);
+	--sl-color-text-invert: var(--color-grey-950);
+	--sl-color-accent-low: color-mix(in srgb, var(--color-brand-purple) 20%, var(--color-grey-950));
+	--sl-color-accent-high: var(--color-brand-purple-light);
+	--sl-color-backdrop-overlay: rgb(0 0 0 / 0.65);
+
+	/* status hues (asides, badges) — dark */
+	--sl-color-green: var(--color-good);
+	--sl-color-green-low: color-mix(in srgb, var(--color-good) 20%, var(--color-bg));
+	--sl-color-green-high: color-mix(in srgb, var(--color-good) 60%, white);
+	--sl-color-red: var(--color-warn);
+	--sl-color-red-low: color-mix(in srgb, var(--color-warn) 20%, var(--color-bg));
+	--sl-color-red-high: color-mix(in srgb, var(--color-warn) 60%, white);
+	--sl-color-orange: var(--color-caution);
+	--sl-color-orange-low: color-mix(in srgb, var(--color-caution) 20%, var(--color-bg));
+	--sl-color-orange-high: color-mix(in srgb, var(--color-caution) 60%, white);
+	--sl-color-blue: var(--color-info);
+	--sl-color-blue-low: color-mix(in srgb, var(--color-info) 20%, var(--color-bg));
+	--sl-color-blue-high: color-mix(in srgb, var(--color-info) 60%, white);
+	--sl-color-purple: var(--color-brand-purple);
+	--sl-color-purple-low: color-mix(in srgb, var(--color-brand-purple) 20%, var(--color-bg));
+	--sl-color-purple-high: color-mix(in srgb, var(--color-brand-purple) 60%, white);
+}
+
+:root[data-theme='light'],
+[data-theme='light'] ::backdrop {
+	/* light greys */
+	--sl-color-white: var(--color-grey-950);
+	--sl-color-gray-1: var(--color-grey-900);
+	--sl-color-gray-2: var(--color-grey-800);
+	--sl-color-gray-3: var(--color-grey-600);
+	--sl-color-gray-4: var(--color-grey-500);
+	--sl-color-gray-5: var(--color-grey-400);
+	--sl-color-gray-6: var(--color-grey-200);
+	--sl-color-gray-7: var(--color-grey-50);
+	--sl-color-black: var(--color-surface-white);
+	--sl-color-text-invert: var(--color-grey-50);
+	--sl-color-accent-low: rgb(139 92 246 / 0.2);
+	--sl-color-accent-high: #6d28d9;
+	--sl-color-backdrop-overlay: rgb(21 16 24 / 0.5);
+
+	/* status hues — light */
+	--sl-color-green-low: color-mix(in srgb, var(--color-good) 20%, var(--color-bg));
+	--sl-color-green-high: color-mix(in srgb, var(--color-good) 60%, black);
+	--sl-color-red-low: color-mix(in srgb, var(--color-warn) 20%, var(--color-bg));
+	--sl-color-red-high: color-mix(in srgb, var(--color-warn) 60%, black);
+	--sl-color-orange-low: color-mix(in srgb, var(--color-caution) 20%, var(--color-bg));
+	--sl-color-orange-high: color-mix(in srgb, var(--color-caution) 60%, black);
+	--sl-color-blue-low: color-mix(in srgb, var(--color-info) 20%, var(--color-bg));
+	--sl-color-blue-high: color-mix(in srgb, var(--color-info) 60%, black);
+	--sl-color-purple-low: color-mix(in srgb, var(--color-brand-purple) 20%, var(--color-bg));
+	--sl-color-purple-high: color-mix(in srgb, var(--color-brand-purple) 45%, black);
+}
+
+/* ------------------------------------------------------------------ */
+/* 4. Square everything                                                */
+/* ------------------------------------------------------------------ */
+
+*,
+::before,
+::after {
+	border-radius: var(--radius);
+}
+
+#starlight__search {
+	--sl-search-corners: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. Layout (≥50rem): whole-page scroll; fixed header/sidebar/footer; */
+/*    docs column fills the remaining width                            */
+/* ------------------------------------------------------------------ */
+
+@media screen and (min-width: 50rem) {
+	/* content column starts after the inset sidebar box + 1rem gap;
+	   html:root (0,2,1) must outgun Page.astro's scoped (0,2,0) rule */
+	html:root[data-has-sidebar] {
+		--sl-content-inline-start: calc(var(--sl-sidebar-width) + 2rem);
+	}
+
+	/* header: the search column starts exactly at the docs column's left edge
+	   (the real grid is the inner div.header rendered by Header.astro).
+	   The docs column is viewport-centered but clamped by the sidebar — the
+	   same max() keeps search and column in lockstep. Hero pages have no
+	   sidebar but use the identical formula (with a fallback for the unset
+	   --sl-content-inline-start) so the search bar never moves between the
+	   landing page and docs pages */
+	html:root[data-has-sidebar] header.header .header,
+	html:root[data-has-hero] header.header .header {
+		grid-template-columns:
+			calc(
+				max(
+						var(--sl-content-inline-start, calc(var(--sl-sidebar-width) + 2rem)),
+						(100vw - var(--sw-pane-width)) / 2
+					) - var(--sl-nav-pad-x) - var(--sl-nav-gap)
+			)
+			1fr auto;
+	}
+
+	.page > header.header {
+		border-bottom: var(--border);
+		background-color: var(--color-bg);
+	}
+
+	/* left sidebar: bordered box that condenses to its content, right-justified
+	   so it hugs the docs column (same centering formula, minus the 1rem gap) */
+	.sidebar-pane {
+		inset-block-start: calc(var(--sl-nav-height) + 1rem);
+		inset-block-end: auto;
+		max-block-size: calc(100vh - var(--sl-nav-height) - var(--sw-footer-height) - 2rem);
+		inset-inline-start: auto;
+		inset-inline-end: calc(
+			100vw -
+				max(
+					var(--sl-content-inline-start),
+					(100vw - var(--sw-pane-width)) / 2
+				) + 1rem
+		);
+		width: fit-content;
+		max-inline-size: var(--sl-sidebar-width);
+		border: var(--border);
+		overflow-y: auto;
+	}
+	.sidebar-content {
+		padding: var(--pad);
+	}
+
+	.main-frame {
+		padding-top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height) + 1rem);
+		padding-inline-end: 1rem;
+		/* at full scroll the panel's bottom border sits 1rem above the footer */
+		padding-bottom: calc(var(--sw-footer-height) + 1rem);
+	}
+	html:not([data-has-sidebar]) .main-frame {
+		padding-inline-start: 1rem;
+	}
+
+	/* docs column: no border or gutter of its own — the framed panels inside
+	   (title box + one box per h2 section) float directly on the canvas */
+	.main-pane {
+		padding-block: 0;
+		padding-inline: 0;
+		/* hug the article width instead of filling the remaining space */
+		max-inline-size: var(--sw-pane-width);
+		/* center on the viewport when there's room; clamp at the sidebar */
+		margin-inline-start: max(
+			0px,
+			calc(
+				(100vw - var(--sw-pane-width)) / 2 -
+					var(--sl-content-inline-start, 1rem)
+			)
+		);
+	}
+	main {
+		padding: 0;
+	}
+	.content-panel {
+		padding: 0;
+	}
+}
+
+/* table of contents: sticky bordered box that hugs its content */
+@media screen and (min-width: 72rem) {
+	.main-frame > div {
+		gap: 1rem;
+		align-items: flex-start;
+	}
+	.main-pane {
+		width: auto;
+		flex: 0 1 var(--sw-pane-width);
+		min-width: 0;
+	}
+	.right-sidebar-container {
+		width: fit-content;
+		max-width: var(--sl-sidebar-width);
+		position: sticky;
+		top: calc(var(--sl-nav-height) + 1rem);
+		height: fit-content;
+	}
+	.right-sidebar {
+		position: static;
+		width: auto;
+		height: auto;
+		max-height: calc(100vh - var(--sl-nav-height) - var(--sw-footer-height) - 2rem);
+		overflow-y: auto;
+		padding-top: 0;
+		border: var(--border);
+	}
+	.right-sidebar-panel {
+		padding: 1rem 2rem 1rem 2rem;
+	}
+	.right-sidebar-panel .sl-container {
+		width: 100%;
+		max-width: 100%;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* 5.5 Framed content panels: h1 title box + one box per h2 section    */
+/*     (sections are wrapped by src/plugins/rehype-sections.mjs)       */
+/* ------------------------------------------------------------------ */
+
+/* gap instead of Starlight's hairline between stacked content panels */
+.content-panel + .content-panel {
+	border-top: 0;
+	margin-top: var(--pad);
+}
+/* the panel gap is the whole title→content spacing — Starlight's 1.5rem
+   top margin here would collapse through the unpadded panel and widen it */
+.sl-markdown-content {
+	margin-top: 0;
+}
+/* footer (meta row + prev/next cards): 1rem below the last section,
+   overriding Starlight's 1.5rem .sl-container > * + * rhythm */
+.sl-container > footer {
+	margin-top: var(--pad);
+}
+
+/* page-title panel (hero/splash pages nest their h1 deeper, so they
+   won't match this selector) */
+.content-panel:has(> .sl-container > h1#_top) {
+	border: var(--border);
+	padding: var(--sw-section-pad-y) var(--sw-section-pad-x);
+}
+h1#_top {
+	margin-top: 0;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+/* h2 section panels */
+.sl-markdown-content > .sw-section {
+	border: var(--border);
+	padding: var(--sw-section-pad-y) var(--sw-section-pad-x);
+	margin-top: 0;
+}
+.sl-markdown-content > .sw-section + .sw-section {
+	margin-top: var(--pad);
+}
+.sl-markdown-content > .sw-section > :first-child {
+	margin-top: 0;
+}
+
+/* marketing heading voice: bold, tight tracking */
+.sl-markdown-content h2 {
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+.sl-markdown-content h3 {
+	letter-spacing: -0.01em;
+}
+
+/* ------------------------------------------------------------------ */
+/* 6. Mobile (<50rem): document scroll, panels stay bordered/square    */
+/* ------------------------------------------------------------------ */
+
+@media screen and (max-width: 49.9375rem) {
+	:root {
+		--sw-section-pad-x: 0.75rem;
+		--sw-section-pad-y: 0.75rem;
+	}
+	header.header {
+		border-bottom: var(--border);
+		background-color: var(--color-bg);
+	}
+	.main-frame {
+		padding-top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height) + 1rem);
+		padding-inline: 0.5rem;
+		padding-bottom: calc(var(--sw-footer-height) + 1rem);
+	}
+	main {
+		padding: 0;
+	}
+	.content-panel {
+		padding: 0;
+	}
+	.sidebar-pane {
+		background-color: var(--color-bg);
+	}
+	.sidebar-content {
+		padding: var(--pad);
+	}
+}
+
+/* narrowest screens: panels go flush to the viewport edges, border-y only
+   (mirrors the marketing site's 550px framed/flush breakpoint) */
+@media screen and (max-width: 34.375rem) {
+	.main-frame {
+		padding-inline: 0;
+	}
+	.content-panel:has(> .sl-container > h1#_top),
+	.sl-markdown-content > .sw-section {
+		border-inline: none;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* 7. Component polish                                                 */
+/* ------------------------------------------------------------------ */
+
+/* site title: fit inside the fixed header column that aligns search + docs */
+.site-title {
+	font-size: var(--sl-text-lg);
+	gap: 0.75rem;
+}
+
+/* header social icons: grey, not accent-orange */
+.social-icons a {
+	color: var(--color-muted);
+}
+.social-icons a:hover {
+	color: var(--color-text);
+}
+
+/* header search trigger + hamburger */
+site-search button[data-open-modal] {
+	border: var(--border);
+	background-color: transparent;
+}
+starlight-menu-button button {
+	border: var(--border);
+	background-color: transparent;
+	color: var(--color-text);
+	box-shadow: none;
+}
+
+/* mobile TOC dropdown (fixed bar below header, <72rem) */
+mobile-starlight-toc nav {
+	border-top: var(--border);
+	background-color: var(--color-bg);
+}
+mobile-starlight-toc .toggle {
+	border: var(--border);
+	background-color: var(--color-bg);
+	box-shadow: none;
+}
+mobile-starlight-toc .dropdown {
+	border: var(--border);
+	background-color: var(--color-bg);
+	margin-inline: 0.5rem;
+}
+
+/* search modal (Pagefind) */
+site-search dialog {
+	border: var(--border);
+	background-color: var(--color-bg);
+}
+#starlight__search {
+	--pagefind-ui-border: var(--color-rule);
+	--pagefind-ui-background: var(--color-bg);
+}
+
+/* tabs: boxed tab buttons (like the page nav panels) + a separate bordered
+   panel for the tab content */
+starlight-tabs [role='tablist'] {
+	gap: 0.5rem;
+	border-bottom: none;
+	padding: 0;
+}
+starlight-tabs .tab > [role='tab'] {
+	border: var(--border);
+	padding: 0.375rem 1rem;
+	color: var(--color-text-soft);
+	font-family: var(--sl-font-system-mono);
+	font-size: var(--sl-text-sm);
+	letter-spacing: 0.05em;
+}
+starlight-tabs .tab > [role='tab'][aria-selected='true'] {
+	background-color: var(--color-selected);
+	border-color: var(--color-rule-strong);
+	color: var(--color-accent-text);
+	font-weight: 600;
+}
+starlight-tabs [role='tabpanel'] {
+	border: var(--border);
+	padding: var(--pad);
+	margin-top: 1rem;
+}
+
+/* badges (sidebar nav + page title): house style rather than Starlight's
+   filled variant colours — square, transparent, 1px accent rule, accent text.
+   --color-accent-text is the theme-aware violet (#a78bfa dark / #6d28d9
+   light); both are AA on their own canvas, unlike the raw brand #8b5cf6. */
+.sl-badge:is(.sl-badge) {
+	/* Starlight paints the badge from these vars, and its own
+	   .sl-badge:is(.sl-badge) rule out-specifies a bare .sl-badge — so set the
+	   vars rather than fight it. Border width/style come from Starlight. */
+	--sl-color-bg-badge: transparent;
+	--sl-color-border-badge: var(--color-accent-text);
+	--sl-badge-default-bg: transparent;
+	--sl-badge-default-border: var(--color-accent-text);
+	--sl-badge-default-text: var(--color-accent-text);
+	border-radius: var(--radius);
+	color: var(--color-accent-text);
+	font-weight: 500;
+}
+
+/* 1px borders everywhere — flatten Starlight's thicker rules */
+.sl-markdown-content blockquote {
+	border-inline-start: var(--border);
+}
+
+/* sidebar nav states */
+.sidebar-content a {
+	color: var(--color-text-soft);
+}
+.sidebar-content a:hover {
+	color: var(--color-text);
+	background-color: var(--color-hover);
+}
+.sidebar-content a[aria-current='page'] {
+	background-color: var(--color-selected);
+	color: var(--color-accent-text);
+	font-weight: 600;
+}
+/* .sidebar-pane is width:fit-content, so the pane measures the widest label —
+   and font-weight:600 on the current page makes that label wider, resizing the
+   whole box as you navigate. Reserve that delta on every *other* link, so the
+   pane always measures "widest label as if bold" no matter which page you're on.
+   Invisible: the links are display:block, so their fill already spans the pane
+   and the label is left-aligned. To re-measure the slack, run in the console:
+
+     const p = document.querySelector('.sidebar-pane'), w = () => p.getBoundingClientRect().width;
+     [...document.querySelectorAll('.sidebar-content a')].map(a => {
+       a.toggleAttribute('aria-current'); const x = w(); a.removeAttribute('aria-current'); return x; })
+
+   every entry should come back the same width. */
+.sidebar-content a:not([aria-current='page']) {
+	padding-inline-end: calc(
+		var(--sl-sidebar-item-padding-inline, 0.5rem) + var(--sw-nav-bold-slack)
+	);
+}
+
+/* markdown: square asides with a real 1px rule; banner */
+.sl-markdown-content .starlight-aside {
+	border: 1px solid var(--sl-color-asides-border);
+}
+.sl-banner {
+	border: var(--border);
+	background-color: var(--color-selected);
+	box-shadow: none;
+	margin: 1rem;
+}
+
+/* link buttons: match the admin app Button (cloud-ui Button.module.css) —
+   square, 1px border, soft tinted fill, 2.25rem tall */
+.sl-link-button {
+	height: 2.25rem;
+	padding: 0 1rem;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1;
+	gap: 0.5rem;
+	border: var(--border-width) solid transparent;
+	border-radius: var(--radius);
+	transition:
+		background-color 150ms cubic-bezier(0.2, 0.7, 0.2, 1),
+		border-color 150ms cubic-bezier(0.2, 0.7, 0.2, 1),
+		color 150ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+/* Icon.astro's width:1em is layered; its inline --sl-icon-size only sets font-size */
+.sl-link-button svg {
+	width: 1rem;
+	height: 1rem;
+}
+.sl-link-button:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 2px rgb(139 92 246 / 0.4);
+}
+
+/* primary — dark is the :root default in this file */
+.sl-link-button.primary {
+	background-color: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+	border-color: var(--color-accent);
+	color: var(--color-text);
+}
+.sl-link-button.primary:hover {
+	background-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-surface));
+	color: var(--color-text);
+}
+.sl-link-button.primary:active {
+	background-color: color-mix(in srgb, var(--color-accent) 36%, var(--color-surface));
+}
+[data-theme='light'] .sl-link-button.primary {
+	background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+}
+[data-theme='light'] .sl-link-button.primary:hover {
+	background-color: color-mix(in srgb, var(--color-accent) 20%, var(--color-surface));
+}
+[data-theme='light'] .sl-link-button.primary:active {
+	background-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-surface));
+}
+
+/* minimal / secondary → the admin "default" variant */
+.sl-link-button.minimal,
+.sl-link-button.secondary {
+	background-color: var(--color-surface);
+	border-color: var(--color-rule-strong);
+	color: var(--color-text);
+	/* restore — Starlight's minimal variant zeroes its inline padding */
+	padding: 0 1rem;
+}
+.sl-link-button.minimal:hover,
+.sl-link-button.secondary:hover {
+	background-color: var(--color-hover);
+	color: var(--color-text);
+}
+
+/* ------------------------------------------------------------------ */
+/* 8. Landing page (any page with a frontmatter hero): full-bleed      */
+/* ------------------------------------------------------------------ */
+
+/* kill the width clamps — html:root[...] (0,2,1) outguns Page.astro's
+   scoped html:not([data-has-sidebar]) { --sl-content-width: 67.5rem } */
+html:root[data-has-hero] {
+	--sl-content-width: 100%;
+}
+[data-has-hero] .sl-container {
+	max-width: none;
+}
+[data-has-hero] .content-panel {
+	padding: 0;
+	border: none;
+}
+/* neutralize the 1.5rem sl-container rhythm between hero and card grid */
+[data-has-hero] .sl-container > * + * {
+	margin-top: 0;
+}
+
+@media screen and (min-width: 50rem) {
+	/* edge-to-edge: undo the 1rem gutters and the pane clamp from section 5.
+	   Ties with html:not([data-has-sidebar]) .main-frame — later in file wins */
+	html[data-has-hero] .main-frame {
+		padding-top: var(--sl-nav-height);
+		padding-inline: 0;
+		padding-bottom: var(--sw-footer-height);
+	}
+	html[data-has-hero] .main-pane {
+		max-inline-size: none;
+		margin-inline-start: 0;
+		/* also undo the ≥72rem flex clamp (flex: 0 1 var(--sw-pane-width)) */
+		flex: 1 1 100%;
+		width: 100%;
+	}
+}
+@media screen and (max-width: 49.9375rem) {
+	[data-has-hero] .main-frame {
+		padding-top: var(--sl-nav-height);
+		padding-inline: 0;
+		padding-bottom: var(--sw-footer-height);
+	}
+}
+
+/* content below the hero: full-width band with an edge-to-edge top rule,
+   card grid centered inside at a generous clamp */
+[data-has-hero] .sl-markdown-content {
+	border-top: var(--border);
+	padding: clamp(0.75rem, 2vh, 1.25rem) var(--sw-section-pad-x) clamp(1.25rem, 3vh, 2rem);
+}
+[data-has-hero] .sl-markdown-content > .card-grid {
+	max-width: 72rem;
+	margin-inline: auto;
+}
+[data-has-hero] .sl-container > footer {
+	padding-inline: var(--sw-section-pad-x);
+}
