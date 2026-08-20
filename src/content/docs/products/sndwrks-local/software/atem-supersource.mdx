@@ -1,0 +1,102 @@
+---
+title: ATEM SuperSource
+description: Design SuperSource layouts visually and fire them from a macro. In preview.
+sidebar:
+  order: 10
+  badge:
+    text: Preview
+---
+
+import { Steps, Icon, Aside } from '@astrojs/starlight/components';
+
+<Aside type="tip" title="In preview">
+ATEM supersource is in preview. If this is something you want on your show, [get in touch on Discord](https://discord.gg/Fe3mPqwxyn) or through our [contact page](https://www.sndwrks.com/contact) and we'll talk through it with you.
+</Aside>
+
+Blackmagic's ATEM switchers have a SuperSource: a four-box picture-in-picture composite you can lay out however you like. Programming it from the switcher panel means typing numbers and squinting at multiview.
+
+sndwrks local gives you a visual editor for it. Drag boxes on a canvas, save the layout into a macro command, and fire it from anywhere a macro can be fired.
+
+## Add the switcher
+<Icon name="star" />
+
+The ATEM is a device like anything else. Add it on the [Devices](/products/sndwrks-local/software/devices) page.
+
+The server speaks the switcher's own protocol, so it keeps a live session going and knows what the switcher can do.
+
+## Build the layout
+<Icon name="star" />
+
+Add a **Device** command to a macro, pick your ATEM, and choose **SuperSource Apply Layout**. That opens the editor.
+
+### The canvas
+<Icon name="star" />
+
+Four boxes, each with its own colour, over a 16:9 canvas. Drag a box to move it, drag a corner handle to scale it, or drag one of the edge handles to crop it.
+
+- **Arrow keys** nudge the selected box 1 pixel.
+- **Shift + arrows** nudge 10 pixels.
+- **1** – **4** select a box.
+- **G** toggles the grid.
+- **S** toggles snap.
+- **Delete** or **Backspace** resets the selected box — confirm first, then it goes back to its default position, size, and input.
+
+### The toolbar
+<Icon name="star" />
+
+- **Layout Name** — name it something you'll recognize in six weeks. "Two Up with Lower Third", not "layout 3".
+- **Box selector** — four buttons with the color swatch that matches each box on the canvas.
+- **Grid** — a 16 × 9 alignment grid over the canvas.
+- **Snap** — boxes snap to the grid as you drag.
+- **Mask** — appears only when a mask is uploaded. See below.
+
+### Box controls
+<Icon name="star" />
+
+The panel beside the canvas holds the exact numbers for the selected box, and the canvas and the numbers always agree — move one and the other follows.
+
+- **Box on** — whether this box is part of the composite at all.
+- **Input Source** — the ATEM input number feeding the box.
+- **Position X / Position Y**
+- **Scale (%)**
+- **Crop Left / Right / Top / Bottom**, with a **Clear Crop** button that goes dim when there's nothing to clear.
+
+<Aside type="tip">
+Nothing you do in the editor touches your macro until you confirm the dialog. **Cancel** is a true discard, so you can shove boxes around to see what a layout would look like and back out cleanly.
+</Aside>
+
+## Fire it
+<Icon name="star" />
+
+The saved command applies all four boxes in a single packet, so the switcher lands the whole layout at once rather than snapping through intermediate states.
+
+If something's wrong you get a specific message:
+
+- No ATEM selected on the command.
+- The selected ATEM no longer exists.
+- This ATEM model has no SuperSource.
+- This ATEM's SuperSource has fewer boxes than the layout uses.
+
+## Design against your scenery
+<Icon name="star" />
+
+Real content rarely fills a clean rectangle.
+
+Upload a **SuperSource mask** and the editor floats it over the canvas so you can lay out against the actual geometry.
+
+<Steps>
+
+1. Go to **Settings → ATEM → SuperSource Mask**.
+2. Upload a PNG or SVG of your scenic geometry — 512 KB max.
+3. Save.
+
+</Steps>
+
+Once a mask exists, the editor toolbar grows a **Mask** switch and an opacity slider so you can fade it against your boxes.
+
+<Aside type="note">
+The mask is a design aid and nothing more. It never reaches the switcher and never appears in program. One mask per server.
+</Aside>
+
+Uploading and replacing a mask is gated on `settings.atem.superSourceMask.edit`; seeing the panel at all needs `settings.atem.view`.
+

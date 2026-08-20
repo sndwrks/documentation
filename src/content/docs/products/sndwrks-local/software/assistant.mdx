@@ -1,0 +1,101 @@
+---
+title: Assistant
+description: Ask for changes in plain language, approve them before they run. In preview.
+sidebar:
+  order: 13
+  badge:
+    text: Preview
+---
+
+import { Steps, Icon, Aside } from '@astrojs/starlight/components';
+
+<Aside type="tip" title="In preview">
+The assistant is currently in preview. Our goal is to have this be a scoped, useful tool.
+
+Chats around documentation currently work very well right now. Control of devices and router are in active development.
+
+We want your feedback on this feature, so use the thumbs up or down, or drop us a line.
+</Aside>
+
+The assistant is a chat panel that can read your server's configuration and propose changes to it. You describe what you want: "add the three QLab machines on the video VLAN and ping-monitor them".
+
+Any action by the assistant must be approved by you. We ask that you read the actions proposed carefully.
+
+## Open it
+<Icon name="star" />
+
+The wand icon in the header opens the assistant as a drawer down the right-hand side.
+
+We show an AI Disclosure so that we're all on the same page.
+
+Click **Got it** to dismiss it.
+
+## Conversations
+<Icon name="star" />
+
+The bar at the top of the panel holds a conversation picker, a `+` to start a new one, and a button to delete the current one. The newest conversation opens by default.
+
+Start a new conversation when you change subject. The assistant carries the whole conversation as context, so a fresh one is less likely to get confused by what you were doing an hour ago.
+
+## Asking
+<Icon name="star" />
+
+Type in the box at the bottom.
+
+- **Enter** sends.
+- **Shift + Enter** starts a new line.
+- While it's working, the send button becomes a **stop** button.
+
+Sometimes it'll answer with a **question card** instead of prose: a short question and a row of buttons. This will help the assistant make sure it has your intentions correct. 
+
+The assistant is directed to make sure all your inputs are correct. For example, if you enter an invalid IP address, the assistant will flag this and ask you to correct it.
+
+## Plans
+<Icon name="star" />
+
+Checking items on the server happens immediately. If you want to know the state of a device for example, the agent will find that information and display it for you.
+
+Anything that *changes* something gets collected into a **plan card**:
+
+- A numbered list of steps in plain language.
+- A status: `awaiting approval`, `approved`, `executing`, `completed`, `failed`, `rejected`, or `stale`.
+- **Reject** and **Approve & run**.
+
+Once running, each step gets a tick, a cross, or a skip marker as it lands, and a failed step shows why. A plan that goes `stale` means the item in question changed, just ask the assistant to build a fresh one.
+
+<Aside type="caution">
+Please, read the steps before you approve. The assistant is good, and it is not infallible. It's proposing changes to a server that may be wired to a very expensive rig.
+</Aside>
+
+### Permissions still apply
+<Icon name="star" />
+
+The assistant acts as *you*. It can't do anything your account can't do.
+
+If a plan contains a step you don't have permission for, the **Approve & run** button is disabled and the card says so. The server re-checks every step's permission again at approval time.
+
+## What it can touch
+<Icon name="star" />
+
+Right now the assistant works with devices and the documentation.
+
+**Devices** — list and inspect devices, list destinations, create, update and delete devices, set up monitoring, and create, update and delete destinations. Everything on that list that writes goes through a plan.
+
+**Documentation** — it can search and read these docs to answer "how do I…" questions. Answers are cited back to a `docs.sndwrks.com` URL that a search actually returned, so a citation points at a page that exists rather than one that sounds plausible.
+
+## Feedback
+<Icon name="star" />
+
+Assistant replies carry thumbs up and thumbs down buttons. A thumbs-down opens an optional comment box.
+
+<Aside type="note">
+Comments go to sndwrks and are not stored on your server. Please don't paste anything sensitive in there, or do live your truth, just know that we read everything.
+</Aside>
+
+## Where the thinking happens
+<Icon name="star" />
+
+The assistant runs through sndwrks cloud.
+
+That means the assistant needs a working [cloud connection](/products/sndwrks-local/software/cloud).
+

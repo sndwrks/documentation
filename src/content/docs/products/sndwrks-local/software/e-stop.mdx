@@ -1,0 +1,63 @@
+---
+title: E-Stop
+description: The big red button, and exactly what it stops.
+sidebar:
+  order: 15
+---
+
+import { Icon, Aside } from '@astrojs/starlight/components';
+
+The round red button in the bottom-left corner of every page is the e-stop. When it's engaged it glows, and the server stops passing show control.
+
+It's on screen on every page, for everyone, whether or not you're allowed to press it.
+
+## What it stops
+<Icon name="star" />
+
+While engaged:
+
+- **The router drops everything.** Messages arriving from your devices are discarded rather than routed on. Because macro triggers are evaluated after routing, an incoming OSC message can't fire a macro either.
+- **Haze watch stops running its triggers.** Each trigger sends its configured e-stop message and holds in the `eStop` state. The trigger loop won't start while the e-stop is engaged.
+
+Engaging and disengaging are both written to the [Events](/products/sndwrks-local/software/utility#events) log, so there's always a record of when the -stop went on and off.
+
+<Aside type="note">
+The e-stop stops *control*, not the server. Reading things, browsing the UI, and adjusting configuration all keep working.
+</Aside>
+
+## Who can press it
+<Icon name="star" />
+
+Engaging and disengaging are **separate** permissions:
+
+- `settings -> global -> eStop -> engage`
+- `settings -> global -> eStop -> disengage`
+
+Stopping the show and restarting it are different trust decisions. It's entirely reasonable to let everyone in the room stop the show while keeping the decision to resume with one key individual.
+
+If you press the button without the matching grant, you'll get a message saying so and nothing happens.
+
+## Other ways to fire it
+<Icon name="star" />
+
+**From a macro.** The **System** command type has an *Emergency Stop* action. Put it on the end of a macro and any trigger you like becomes an e-stop trigger.
+
+**From the OSC API.** Two addresses:
+
+```
+/sndwrks/server/v1/estop/engage
+/sndwrks/server/v1/estop/disengage
+```
+
+See the [OSC API reference](/reference/osc-api-v1/) for the details.
+
+**As a macro trigger.** The **Server Event** trigger fires on `eStopEngage` and `eStopDisengage`, so you can hang your own behaviour off the e-stop — kill a house-light look on engage, restore it on disengage.
+
+**From the license.** If a subscription lapses long enough, the server engages the e-stop itself. See [Cloud](/products/sndwrks-local/software/cloud#what-happens-when-a-subscription-lapses) — the countdown to that is not subtle, and you'll have seen it coming for a while.
+
+## Engage on startup
+<Icon name="star" />
+
+**Settings → Global → E-Stop Settings** has a checkbox that engages the e-stop whenever the server boots.
+
+Worth turning on if you're running haze control. A server that comes back from a power cut and immediately starts hazing an empty room because a trigger threshold says so is not the surprise you want.
