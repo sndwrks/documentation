@@ -13,6 +13,11 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    # Consumed by notify-discord below, so a run that changed nothing stays quiet.
+    outputs:
+      changed: ${{ steps.pr.outputs.changed }}
+      pr_url: ${{ steps.pr.outputs.pr_url }}
+      pr_state: ${{ steps.pr.outputs.pr_state }}
     steps:
       - uses: actions/checkout@v5
 
@@ -27,10 +32,16 @@ jobs:
         run: uv run --frozen --group llms scripts/generate_llms_txt.py
 
       - name: Open or update PR if changed
+        id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git diff --quiet public/llms.txt && echo "No changes" && exit 0
+          if git diff --quiet public/llms.txt; then
+            echo "No changes"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
 
           BRANCH="chore/update-llms-txt"
           git config user.name "github-actions[bot]"
@@ -52,11 +63,55 @@ jobs:
           # Create PR only if one doesn't already exist
           EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
           if [ -z "$EXISTING_PR" ]; then
-            gh pr create \
+            PR_URL=$(gh pr create \
               --title "chore: update llms.txt" \
               --body "Auto-generated from documentation changes." \
               --base main \
-              --head "$BRANCH"
+              --head "$BRANCH")
+            echo "pr_state=created" >> "$GITHUB_OUTPUT"
           else
             echo "Updated existing PR #$EXISTING_PR"
+            PR_URL=$(gh pr view "$EXISTING_PR" --json url --jq .url)
+            echo "pr_state=updated" >> "$GITHUB_OUTPUT"
           fi
+          echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+
+  # Failure-only, plus a ping when the auto-PR actually appears — a run that
+  # regenerated llms.txt to no effect is not worth a card.
+  #
+  # Bracket syntax on needs is load-bearing: `needs.generate-llms-txt` parses as
+  # SUBTRACTION in a GitHub expression and silently evaluates to nothing.
+  notify-discord:
+    if: >-
+      ${{ !cancelled()
+          && (needs['generate-llms-txt'].result != 'success'
+              || needs['generate-llms-txt'].outputs.changed == 'true') }}
+    needs: [generate-llms-txt]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout the notify action
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Notify Discord
+        uses: ./.github/actions/discord-notify
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          needs-json: ${{ toJSON(needs) }}
+          # On the success path the card would otherwise just repeat the commit
+          # subject; say what the run produced instead.
+          subtitle: >-
+            ${{ needs['generate-llms-txt'].outputs.changed == 'true'
+                && format('llms.txt PR {0}: {1}',
+                          needs['generate-llms-txt'].outputs.pr_state,
+                          needs['generate-llms-txt'].outputs.pr_url)
+                || '' }}
