@@ -2,21 +2,23 @@
 title: Macros
 description: Build complex show actions.
 sidebar:
-  order: 7
+  order: 9
 ---
 
 import { Card, Steps, Icon, Aside } from '@astrojs/starlight/components';
 
-Macros are node-based composable actions.
+Macros are node-based composable actions. Ok, what does that mean for you?
 
-They're very handy for creating complex controls easily. As an example, you could build a macro to send yourself an email, change a videohub crosspoint, and send an OSC message.
+They can be used to create complex controls easily. As an example, you could build a macro to send yourself an email, change a crosspoint, and send an OSC message.
 
-They consist of **triggers**, **commands**, and **transformers**. Triggers, for example an OSC message, fire the macro. Commands execute actions, like muting an OCA/AES70-capable amplifier. Transformers modify the macro execution with blocks like delay.
+They consist of **triggers**, **commands**, **inputs**, **outputs**, and **transformers**. Triggers, for example an OSC message, fire the macro. Commands execute actions, like muting an OCA/AES70-capable amplifier. Inputs allow for streaming data in. Outputs allow for streaming data out. Transformers modify the macro execution with blocks like delay.
+
+Creating, editing, and deleting triggers and commands is permission-gated. The buttons stay where they are either way, they just go dim, and hovering one tells you which [permission](/products/sndwrks-local/software/users-and-permissions) you need.
 
 ## Build a Macro
 <Icon name="star" />
 
-Let's make our first macro! 
+Let's make our first macro! This example will be creating a trigger macro.
 
 <Steps>
 1. Click the Plus `+` next to the macro dropdown.
@@ -35,7 +37,7 @@ Let's make our first macro!
 
 The macros page consists of 3 major sections: the macro controls (top), the nodes (side), the canvas (middle).
 
-![an image that describes the locations of the 3 major items.](../../../../../assets/screenshots/macros_panels-layout.png)
+![The macros page: controls along the top, nodes down the side, canvas in the middle](../../../../../assets/screenshots/macros_panels-layout.png)
 
 ### Macro Controls Section
 <Icon name="star" />
@@ -54,6 +56,8 @@ You can use the filter box to find something quickly, and the section can be res
 
 The canvas section holds the selected macros nodes. It allows for visual editing of the function of the macro. It is drag and drop for the most part. 
 
+![A completed macro on the canvas](../../../../../assets/screenshots/macros_canvas-example.png)
+
 ## Triggers
 <Icon name="star" />
 
@@ -65,27 +69,37 @@ Disabling a trigger will stop it from firing any macros. You can also change thi
 
 When you are editing a trigger, you can see which macros have the trigger attached to them.
 
-![showing the macros using this trigger section](../../../../../assets//screenshots/macros_macros-using-this-trigger.png)
+![The Macros using this trigger section of the trigger editor](../../../../../assets/screenshots/macros_macros-using-this-trigger.png)
 
 ### Custom OSC Address
 <Icon name="star" />
 
-The OSC trigger allows for triggering a macro via a OSC Address.
-
-Any incoming OSC message that is parseable by the server will trigger the address.
+The OSC trigger allows for triggering a macro via an OSC Address. Any incoming OSC message that is parseable by the server can fire it.
 
 For example, if you had `/my-show/event/start`, any device could send that to the server and trigger the macros with this trigger attached.
+
+Use the **Match Type** to decide how the incoming address is compared:
+
+- **Exact** — the address must match exactly, e.g. `/my/custom/address`.
+- **Glob** — wildcard matching with `* ? [] {}`, e.g. `/input/*/mute` catches any input's mute.
+- **Regex** — full regular expressions for the fancy stuff, e.g. `/processing/input/\d/mute`. An AI chat should be able to help you generate the proper regex if you need more complex behavior.
+
+Addresses can't start with `/sndwrks/server` — that's reserved for the server itself. In regex mode the pattern also has to be valid, and the field will flag it if it isn't.
+
+![The OSC trigger editor showing match type](../../../../../assets/screenshots/macros_trigger-editor-osc.png)
 
 ### sACN
 <Icon name="star" />
 
-The sACN trigger allows for triggering a macro via sACN values. 
+The sACN trigger allows for triggering a macro via sACN values. You can also have an sACN input too.
 
 The trigger behavior is more complex. The sACN trigger is fired on **value crossing** not **level detection**, so you may need to *pick up* this macro (i.e. toggle the value from below to above).
 
 On server start or sACN restart, the sACN engine checks values and the next sACN value received will fire the macro. 
 
 The server has flicker protection, so if there's rapid crossing of the value back and forth the server will slowly increase the time between responding to this trigger. Eventually, if the channel keeps flickering, the server will disable this trigger until there's 5 seconds of stability.
+
+![The sACN trigger editor](../../../../../assets/screenshots/macros_trigger-editor-sacn.png)
 
 <Aside type="note" icon="pencil">
 **Here's some examples:**
@@ -114,6 +128,8 @@ This trigger allows for firing a macro based on a time. The trigger can either b
 
 The time is derived from the server time, which is viewable in the top right corner.
 
+![The wall clock trigger editor](../../../../../assets/screenshots/macros_trigger-editor-wall-clock.png)
+
 ## Commands
 <Icon name="star" />
 
@@ -132,12 +148,22 @@ Device commands are specific device integrations: blackmagic videohub, l'acousti
 
 Devices will show up in the command dropdown that have been specified in the [Devices](/products/sndwrks-local/software/devices) page. The options will dynamically change based on the device type selected.
 
+Each integration gets its own tailored editor:
+
+- **AES70/OCA** — browse the device's object tree, pick a control, and set a value. Values are bounds-checked against the min/max the device reports.
+- **Blackmagic ATEM** — a visual SuperSource editor. Drag four boxes around a canvas and the command fires that layout at the switcher. See [ATEM SuperSource](/products/sndwrks-local/software/atem-supersource).
+- **Adderlink xDIP**, **d&b audiotechnik**, **L'Acoustics LA4X**, **Blackmagic Videohub** — purpose-built forms for each device's controls. We deliberately limit the functions that are exposed. If you don't see something you need, let us know!
+
+![A d&b device command muting an OCA channel](../../../../../assets/screenshots/macros_command-device-oca.png)
+
 ### Raw TCP
 <Icon name="star" />
 
 Raw TCP commands send tcp messages using a specified encoding and framing. Select a device you'd like to send the TCP message to and enter the desired parameters.
 
 This command type is very helpful for devices that we haven't yet added integrations for, or for doing more extensive control with devices that don't expose OSC or HTTP APIs.
+
+![The raw TCP command editor](../../../../../assets/screenshots/macros_command-raw-tcp.png)
 
 ### Raw UDP
 <Icon name="star" />
@@ -177,10 +203,12 @@ Invalid commands can't be saved.
 sends per hour. When a limit is hit, the send is dropped (not queued), and you'll see a
 notification in the UI and an entry in the Events panel.
 - **Locked sender identity**: All emails are sent from info@sndwrks.xyz with the sndwrks
-notification branding. You control the recipients, subject, body, and template — but not the
+notification branding. You control the recipients, subject and body — but not the
 "From" address. This keeps deliverability high and prevents impersonation.
 
 Rate limits are per command, not per recipient or destination.
+
+![The email command editor](../../../../../assets/screenshots/macros_command-email.png)
 
 ### System
 <Icon name="star" />
@@ -189,8 +217,40 @@ System commands fire system actions with one currently enabled.
 
 **Emergency Stop**
 
-Engages the E-Stop
+Engages the [E-Stop](/products/sndwrks-local/software/e-stop).
 
+## Inputs
+<Icon name="star" />
+
+Inputs put live device data on the canvas.
+
+Where a trigger is an event, an input is a value that streams through the macro. The server holds each input's most recent value, so a command downstream can pull it whenever it runs, rather than only seeing what arrived with the trigger.
+
+New data on an input also pushes through the nodes below it, and [Edge Detect](#edge-detect) watches an input to fire when its value crosses a line.
+
+Each input gets a name, an **Input Type**, and optionally a **Device** to bind it to. The types are **OSC**, **Raw TCP**, **Raw UDP**, **sACN**, and **PSN**.
+
+An OSC input is the involved one. It holds a list of addresses, and each address gets:
+
+- **Name (key)** — what downstream nodes call this value. Letters, numbers and underscores only.
+- **Match** — `Exact`, `Glob`, or `Regex`, the same matching described under [Custom OSC Address](#custom-osc-address).
+- **Address** — the OSC address to read, e.g. `/input/*/mute`.
+- **Args** — any number of named, typed arguments pulled out of the message.
+
+## Outputs
+<Icon name="star" />
+
+An output outputs whatever it receives. It's the other half of an input.
+
+The types are **OSC**, **Raw TCP**, **Raw UDP**, and **PSN**.
+
+An output carries its own configured data as the base, and the upstream payload overrides any field it also sets. That means you can put the parts that never change on the output itself and let the macro supply only what varies.
+
+Outputs bound to a device integration go out the same path a [Device](#device) command does.
+
+<Aside type="note">
+Inputs and outputs are permission-gated and feature-gated. If the **inputs** and **outputs** sections aren't in your nodes sidebar, the feature isn't enabled on your server — that's separate from the create, edit and delete [permissions](/products/sndwrks-local/software/users-and-permissions) on each.
+</Aside>
 
 ## Transformers
 <Icon name="star" />
@@ -209,4 +269,22 @@ The Delay transformer takes in a delay value in milliseconds. It delays the exec
 ### Rate Limit
 <Icon name="star" />
 
-The Rate Limit transformer limits the execution of subsequent nodes per second. 
+The Rate Limit transformer limits the execution of subsequent nodes per second.
+
+### Map
+<Icon name="star" />
+
+The Map transformer reshapes the data flowing through the macro. It gives you a drag-and-drop canvas where you wire the fields coming in from upstream to the fields the downstream nodes expect, and you can shape values along the way with a curve.
+
+This is handy when a trigger gives you one set of values but a command wants them in a different shape or range.
+
+![The Map transformer editor](../../../../../assets/screenshots/macros_transformer-map.png)
+
+### Edge Detect
+<Icon name="star" />
+
+The Edge Detect transformer watches an upstream field and fires when it *crosses* a line, not just while it sits past it. Pick the field and a condition: **changes**, **rises above**, or **falls below** a value.
+
+Like the Map transformer, it opens a full-panel editor to pick the field and set the threshold.
+
+![The Edge Detect transformer editor](../../../../../assets/screenshots/macros_transformer-edge-detect.png)

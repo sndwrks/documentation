@@ -2,7 +2,7 @@
 title: Haze Watch
 description: Monitor atmospherics and keep the level consistent.
 sidebar:
-  order: 8
+  order: 11
 ---
 
 import { Steps, Icon, Aside } from '@astrojs/starlight/components';
@@ -31,7 +31,7 @@ Use these quick steps to get control setup via Haze Watch:
 
 The live tab shows the current sensor status and historical trends.
 
-![Haze Watch Live Tab](../../../../../assets/screenshots/haze-watch_live-tab.png)
+![The Haze Watch live tab](../../../../../assets/screenshots/haze-watch_live-tab.png)
 
 ### Current Average (PM2.5)
 <Icon name="star" />
@@ -48,6 +48,8 @@ This is a 1 second windowed average of all the sensors temperature readings.
 
 This graph shows the moving average of all the sensors PM2.5 readings every two minutes for the past 30 minutes. The moving average is helpful to show trends over time.
 
+You can adjust the timescale and refresh interval in the top right of the graph.
+
 ### Individual Sensors
 <Icon name="star" />
 
@@ -57,6 +59,8 @@ Each sensor that has been connected to the server shows up here. This data is re
 <Icon name="star" />
 
 Triggers combine sensors, commands and a trigger level to allow for messages to be sent out when levels reach a certain threshold. 
+
+![The Haze Watch triggers tab](../../../../../assets/screenshots/haze-watch_triggers.png)
 
 The triggers are evaluated every 10 seconds based on the selected sensors. So, if you have prosc left and prosc right selected (as an example), the trigger will evaluate those sensors moving averages every 10 seconds and decide which command messages should be fired.
 
@@ -78,6 +82,8 @@ You can use the OSC API to send a message to the server to change the trigger le
 The trigger level sets the value you want the above vs below messages to be fired.
 
 For example, if you really like the look at `0.500`, you'd set that as your trigger level. Then when the haze level is below that, you'll send the below message likely increasing haze and when it's above that it'd send the above level which will send your *reduce the haze* or below command.
+
+![The Haze Watch trigger editor](../../../../../assets/screenshots/haze-watch_trigger-editor.png)
 
 ### Commands
 <Icon name="star" />
@@ -103,6 +109,12 @@ The commands are the specific messages you want to send out from your triggers.
 For example, you could have a command that controls your deck hazer and one for the truss hazer and tie that to your stage look trigger.
 
 Or, you could have a "trap room is getting foggy" command that notifies a board op to tell someone backstage to open a door.
+
+![The Haze Watch commands tab](../../../../../assets/screenshots/haze-watch_commands.png)
+
+Clicking a command opens its editor, where the destination and the three messages live.
+
+![The Haze Watch command editor with above, below and E-Stop messages](../../../../../assets/screenshots/haze-watch_command-editor.png)
 
 ### OSC Destination
 <Icon name="star" />

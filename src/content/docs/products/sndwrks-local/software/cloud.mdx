@@ -1,0 +1,72 @@
+---
+title: Cloud
+description: What your server sends us, and what the subscription does.
+sidebar:
+  order: 18
+---
+
+import { Icon, Aside } from '@astrojs/starlight/components';
+
+Your server runs your show on its own.
+
+It does, however, keep a connection to sndwrks cloud. 
+
+## What goes over it
+<Icon name="star" />
+
+**A heartbeat.** Every so often the server checks in so we know it's alive and when it last spoke to us.
+
+**Events.** Entries from the [Events](/products/sndwrks-local/software/utility#events) log are queued and sent up in batches. If the link goes down they store locally until the cloud connection is restored.
+
+**A system snapshot.** Periodic information about the server itself.
+
+**Database backups**, if backup upload is enabled.
+
+**Device monitoring status**, if that's enabled.
+
+**The assistant's model calls**, if the [Assistant](/products/sndwrks-local/software/assistant) is enabled.
+
+## Backups to the cloud
+<Icon name="star" />
+
+The server takes its own backups on a schedule and, when backup upload is on, sends them up to us. This allows us to restore your show if you need it.
+
+If you don't want to wait for the next scheduled one, **Settings → Backup & Restore → Backup to Server** forces one right now.
+
+<Aside type="note">
+A failed upload doesn't lose the backup. It's still on your server, and the next scheduled backup retries the upload.
+</Aside>
+
+## Subscription
+<Icon name="star" />
+
+**Settings → Global** shows a **Subscription** panel: a status light, a label, and the date your subscription will end.
+
+The states:
+
+| Status | What it means |
+|---|---|
+| **Active** | All good. Nothing to do. |
+| **In grace period** | The subscription lapsed. Everything still runs; there's time to sort it out. |
+| **Features disabled** | The grace period ran out. Features are turned off. |
+| **Stopped (E-STOP)** | The server has engaged its own [e-stop](/products/sndwrks-local/software/e-stop). |
+| **Clock problem — enforcement paused** | The server's clock isn't trustworthy, so it has stopped enforcing rather than acting on a bad date. |
+| **Unknown** | The server hasn't established a subscription state yet. |
+
+
+## What happens when a subscription lapses
+<Icon name="star" />
+
+You don't get surprised. As soon as the state leaves *Active*, a banner appears across the top of the app for everyone, with a live countdown to the next step:
+
+- **In grace period** — "renew within *X* to keep features running."
+- **Features disabled** — features are off, and there's a countdown to the automatic stop.
+- **Stopped** — the server has engaged the e-stop. Call us.
+
+The e-stop engaged for this reason is not an operator e-stop. You can't disengage it.
+
+<Aside type="caution">
+There is a lot of runway between "lapsed" and "stopped". We don't want you to not have a show.
+</Aside>
+
+If the clock goes backwards or looks otherwise unreliable, enforcement pauses instead of acting on the wrong date. Check the server's time and NTP settings, and maybe get in touch.

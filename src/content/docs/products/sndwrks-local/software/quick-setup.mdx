@@ -16,10 +16,12 @@ This guide presumes that you've already done the [hardware setup](/products/sndw
 ## Get the App Up
 <Icon name="star" />
 
-We'll find the IP address of the server and open the UI in the browser.
+We'll find the IP address of the server and open the UI in the browser. You can also connect via the mDNS resolved address: `https:/sndwrks-server-<number>`.
 
 <Aside type="note" icon="information">
-When you first connect the browser, you'll see a note about the certificate not being trusted. This is because we generate the certificates not a central authority so you can use the server without internet.
+When you first connect the browser, you'll see a note about the certificate not being trusted. This is because we generate the certificates on the server. 
+
+We made this choice so you wouldn't need internet to connect to the server securely.
 
 Go ahead and tell the browser it's ok to trust the website.
 </Aside>
@@ -29,20 +31,27 @@ Go ahead and tell the browser it's ok to trust the website.
 2. **Find it on the network**<br/> There are two options: Link-local or DHCP.<br/>`Link Local`<br/>If you don't have DHCP or are plugged in directly, this port has a [link-local address](https://en.wikipedia.org/wiki/Link-local_address) assigned of `169.254.1.1`. If your computer doesn't have a link-local address, set one like `169.254.1.99`.<br/>`DHCP`<br/> If you're plugging into the network with DHCP, this port is defaulted to have DHCP enabled and it will (hopefully) an IP address. Use an IP scanner to find the server or look in your DHCP server to see the address.
 </Steps>
 <Steps>
-3. **Open the web app**<br/> Use the IP address from Step 2 (either the DHCP address or `169.254.1.1`) and type that into a browser. 
-4. **Celebrate?**<br/> You should see the homepage of the server website. If not, well heck. We'd recommend confirming your computer network settings, cabling, and the address in the browser. If you're still having trouble reach out on [Discord](https://discord.gg/Fe3mPqwxyn) or our [Contact page](https://www.sndwrks.com/contact).
+3. **Open the web app**<br/> Use the IP address from Step 2 (either the DHCP address or `169.254.1.1`) and type that into a browser or type in the resolved mDNS address `https://sndwrks-server-<number>`.
+4. **Sign in**<br/> The first screen you'll meet is the sign-in gate. If you already have an account, sign in. If not, click **Register** and enter the three-word magic code from the system page in the [cloud app](https://app.sndwrks.com). The magic code is shown in the admin panel for your system. More on this in [Users & Permissions](/products/sndwrks-local/software/users-and-permissions).
+5. **Celebrate?**<br/> You should land on the homepage of the server website. If not, well heck. We'd recommend confirming your computer network settings, cabling, and the address in the browser. If you're still having trouble reach out on [Discord](https://discord.gg/Fe3mPqwxyn) or our [Contact page](https://www.sndwrks.com/contact).
 </Steps>
 
 ### Server Homepage
 <Icon name="star" />
 
-This is close to what you should see. Your url will be different (`http://169.254.1.1` for example)
+This is close to what you should see: the overview page, opening on the analytics tab.
 
-![Homepage](../../../../../assets/screenshots/homepage.png)
+![The overview page you land on after signing in](../../../../../assets/screenshots/overview_analytics.png)
 
 :::tip
 We recommend [Firefox](https://www.firefox.com/en-US/) for various reasons: great privacy, it doesn't use chromium, and it's open-source. 
 :::
+
+<Aside type="note" icon="information">
+If the app ever loses touch with the server, you'll see a "server disconnected" screen with links to reconnect. It'll sort itself out once the server is back.
+</Aside>
+
+![The server disconnected screen](../../../../../assets/screenshots/auth_server-disconnected.png)
 
 ## IP Address Setup
 <Icon name="star" />
@@ -61,7 +70,7 @@ We recommend that if you're using DHCP you reserve the IP Address in your DHCP s
 ### Network Configuration Page
 <Icon name="star" />
 
-![Network configuration page showing the interfaces and other parameters](../../../../../assets/screenshots/network-configuration.png)
+![The Server settings panel with its interface list and network parameters](../../../../../assets/screenshots/settings_server.png)
 
 ## Add a Device (or more)
 
@@ -81,7 +90,8 @@ There's two ways to add devices.
       4. Hit `Enter` or click `Save`
     </Steps>
     **New Device Page**
-    ![New device page showing device creation in progress](../../../../../assets/screenshots/new-device.png)
+
+    ![New device page showing device creation in progress](../../../../../assets/screenshots/devices_new-device.png)
   </TabItem>
   <TabItem label="Add via network scanner">
     <Steps>
@@ -132,6 +142,6 @@ You did it! The server was setup. Hopefully, that was quick. Now you can take th
     title="Utility"
     icon="star"
     description="Little tools to make life easier."
-    href="/products/sndwrks-local/software/haze-watch"
+    href="/products/sndwrks-local/software/utility"
   />
 </CardGrid>
