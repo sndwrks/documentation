@@ -1,0 +1,78 @@
+# Smoke Test's Discord card, posted from outside Smoke Test.
+#
+# This repo is PUBLIC, and Smoke Test is its only pull_request-triggered
+# workflow. A fork PR runs with no secrets, so a notify job living inside
+# smoke-test.yml would silently do nothing for exactly the contributors we are
+# least likely to be watching. workflow_run runs in the base repo's context with
+# full secret access, and — critically — never checks out the PR's code, so the
+# webhook is never in scope alongside anything a stranger wrote.
+#
+# See .github/actions/discord-notify/notify.mjs for the RUN_ID_OVERRIDE family
+# this uses to point the script at the upstream run instead of its own.
+
+name: Notify Smoke Test
+
+on:
+  workflow_run:
+    workflows: [Smoke Test]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    # Failure only, per the agreed event list. This also excludes `cancelled`,
+    # which smoke-test.yml produces routinely via cancel-in-progress: true —
+    # a superseded run is not a broken link.
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
+
+    steps:
+      # No `ref:`. This deliberately takes the DEFAULT BRANCH's copy of the
+      # action — checking out github.event.workflow_run.head_sha would execute a
+      # fork's version of notify.mjs with the webhook in scope, which is the
+      # whole attack this workflow exists to avoid.
+      - name: Checkout the notify action
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      # workflow_run.pull_requests comes back empty for fork PRs, so resolve the
+      # link from the head sha instead. Never fatal — a card without a PR button
+      # still beats silence.
+      - name: Resolve the pull request link
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          URL=$(gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/pulls" \
+                  --jq '.[0].html_url // ""' 2>/dev/null || true)
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      # Invoked directly rather than through ./.github/actions/discord-notify:
+      # the composite action's runs: block maps a fixed set of inputs and cannot
+      # forward these overrides.
+      #
+      # Every attacker-controlled value below is passed through env: and read as
+      # a shell variable by the script — none is interpolated into a run: line.
+      - name: Notify Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEEDS_FROM_API: '1'
+          RUN_ID_OVERRIDE: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT_OVERRIDE: ${{ github.event.workflow_run.run_attempt }}
+          WORKFLOW_OVERRIDE: ${{ github.event.workflow_run.name }}
+          REF_NAME_OVERRIDE: ${{ github.event.workflow_run.head_branch }}
+          EVENT_NAME_OVERRIDE: ${{ github.event.workflow_run.event }}
+          PR_URL_OVERRIDE: ${{ steps.pr.outputs.url }}
+        run: node .github/actions/discord-notify/notify.mjs

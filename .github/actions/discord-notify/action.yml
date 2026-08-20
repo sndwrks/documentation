@@ -1,0 +1,55 @@
+# A town crier for the build pipeline — 2026-08-09T00:00:00Z
+
+name: Discord Notify
+description: Post a workflow's outcome to a Discord channel webhook as a Components V2 card.
+
+inputs:
+  webhook-url:
+    description: >-
+      Discord channel webhook URL. Empty is a supported no-op — fork PRs get no
+      secrets, and the notification must never be the thing that fails CI.
+    required: false
+    default: ''
+  github-token:
+    description: "Token used to read the run's per-job detail. Needs the `actions: read` permission."
+    required: true
+  needs-json:
+    # NB: no expression syntax anywhere in this file outside the runs: block.
+    # GitHub evaluates expressions in input descriptions too, against a scope that
+    # has no `needs`, and an unresolvable one fails the whole action load with a
+    # template validation error before a single step runs.
+    description: >-
+      The calling job's needs context, serialised with toJSON. This is what decides
+      the card's colour, because it is the same signal GitHub uses to gate
+      downstream jobs and therefore already accounts for continue-on-error.
+    required: true
+  subtitle:
+    description: >-
+      Optional line under the heading, e.g. a release tag. Falls back to the run's
+      commit subject.
+    required: false
+    default: ''
+  job-names:
+    description: >-
+      Optional JSON object mapping each needs key to the display name its job's
+      `name:` renders to — or a name PREFIX, for matrix legs and interpolated
+      names. Only needed when jobs declare a custom `name:`, which breaks the
+      script's default recovery of the needs key from the API job name.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    # ubuntu-24.04 runners ship Node 22 on PATH, so no setup-node is needed and the
+    # script can rely on global fetch. `shell:` is required whenever `run:` is set
+    # in a composite action. Composite actions do not populate INPUT_* for run
+    # steps the way JS actions do, so every input is mapped explicitly below.
+    - shell: bash
+      run: node "$GITHUB_ACTION_PATH/notify.mjs"
+      env:
+        DISCORD_WEBHOOK_URL: ${{ inputs.webhook-url }}
+        GH_TOKEN: ${{ inputs.github-token }}
+        NEEDS_JSON: ${{ inputs.needs-json }}
+        SUBTITLE: ${{ inputs.subtitle }}
+        JOB_NAMES_JSON: ${{ inputs.job-names }}
