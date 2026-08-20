@@ -1,0 +1,12 @@
+[project]
+name = "sndwrks-documentation-scripts"
+version = "0"
+requires-python = ">=3.11"
+
+[tool.uv]
+package = false
+default-groups = []
+
+[dependency-groups]
+screenshots = ["playwright>=1.48.0"]
+llms = ["anthropic>=0.40.0"]

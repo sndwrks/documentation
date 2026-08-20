@@ -1,0 +1,94 @@
+---
+title: Device VNC
+description: Open a remote desktop for a device without leaving the app.
+sidebar:
+  order: 7
+---
+
+import { Steps, Icon, Aside } from '@astrojs/starlight/components';
+
+Oftentimes, you need access to a computer that doesn't have a screen available, or it's on the other side of the venue. 
+
+If that machine runs a VNC server, sndwrks Local can open it in a window right in the browser.
+
+## Turn it on for a device
+<Icon name="star" />
+
+VNC is configured per device, on the device's edit drawer.
+
+<Steps>
+
+1. Open the [Devices](/products/sndwrks-local/software/devices) page and click the device.
+2. Scroll to the **VNC** section and tick **VNC Enabled**.
+3. **VNC Port** fills in with `5900`, the standard VNC port. Change it if your machine is somewhere else.
+4. Enter the **VNC Username** and **VNC Password**.
+5. Save.
+
+</Steps>
+
+The username and password are stored as an encrypted secret on the server. Because they're stored as a pair, you have to fill in both if you update one.
+
+Once credentials are saved, the fields show `Credentials set` instead of the values. Type a new pair over them to replace it.
+
+<Aside type="note">
+The username is there for Apple Remote Desktop, which needs one. Standard VNC authentication ignores it.
+
+We recommend filling out both anyway in case the vnc server wants it.
+</Aside>
+
+## Open a session
+<Icon name="star" />
+
+With VNC enabled and credentials saved, an **Open VNC Connection** button appears at the bottom of the section. Click it and the session opens as a large overlay over the app.
+
+Along the top of the overlay:
+
+- **The device name**, so you know which rack you're typing into.
+- **Connection state** — `Connecting…`, `Connected`, `Disconnected`, or `Connection failed`.
+- **The remote resolution**, once connected. Worth a glance — see below.
+- **Quality**, a three-way picker.
+- **Close session**, which tears the connection down on the server too.
+
+Pressing `Esc` closes the session, same as the button.
+
+### Quality
+<Icon name="star" />
+
+Three presets, trading picture for responsiveness:
+
+- **Sharp** — best picture, most data per frame.
+- **Balanced** — the default, and what a normal VNC client would give you.
+- **Fast** — noticeably softer, but much less to push down the wire. Reach for this when scrolling or window drags feel like wading.
+
+Changing quality applies to the running session immediately; it doesn't reconnect. Your choice is remembered in that browser, so it sticks for the next session.
+
+<Aside type="tip">
+If a session feels slow, check the resolution readout first.
+
+A retina Mac, for example, sends all of it's pixels which can be a lot at 5k. 
+</Aside>
+
+### Connecting to a Mac
+<Icon name="star" />
+
+Apple's built-in Screen Sharing only offers slow lossless encodings to non-Apple clients, so large screen updates crawl and the quality presets get ignored by Screen Sharing.
+
+If you're going to lean on VNC for a Mac, install a third-party VNC server on it instead. You'll get a dramatically better session.
+
+## Permissions
+<Icon name="star" />
+
+Two separate grants, deliberately:
+
+- `devices.edit` lets someone turn VNC on and set the port and credentials.
+- `devices.vnc.connect` lets someone actually open a session.
+
+The **Open VNC Connection** button only appears for people who hold the second one.
+
+Handing out a remote desktop into a show machine is a bigger decision than editing a device row, so it's its own switch.
+
+<Aside type="caution">
+A VNC session is full control of that machine. Anyone who can open one can do anything the logged-in user can do.
+
+With great power, comes great responsibility.
+</Aside>

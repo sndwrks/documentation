@@ -1,18 +1,49 @@
 ---
 title: Overview
-description: The landing page and macro shortcut buttons.
+description: Analytics, device monitoring, and macro shortcut buttons.
 sidebar:
   order: 4
 ---
 
-import { Steps, Icon } from '@astrojs/starlight/components';
+import { Steps, Icon, Aside } from '@astrojs/starlight/components';
 
-The "Hello, and welcome!" page is your show-floor home base. It hosts a row of one-tap macro buttons. Tap a button, the macro fires.
+The "Hello, and welcome!" page. It's a tabbed dashboard: **analytics**, **device monitoring**, and **macro buttons**.
+
+
+## Analytics
+<Icon name="star" />
+
+Analytics is the first tab, so it's what you land on.
+
+![The analytics tab on the overview page](../../../../../assets/screenshots/overview_analytics.png)
+
+The tiles across the top are live counters: messages per second, device and connection counts, and the router's p95 in/out latency.
+
+![The analytics stat tiles row](../../../../../assets/screenshots/overview_stat-tiles.png)
+
+Network stats sit below them, broken out per interface.
+
+![The network stats section of the analytics tab](../../../../../assets/screenshots/overview_network-stats.png)
+
+## Device monitoring
+<Icon name="star" />
+
+Devices that have monitoring selected will show up here with their state.
+
+Don't see a device you were expecting? Don't despair. Confirm that monitoring is turned on. [Here's the docs for that](/products/sndwrks-local/software/devices/#monitoring).
+
+![The device monitoring tab on the overview page](../../../../../assets/screenshots/overview_device-monitoring.png)
 
 ## Pin macros to the overview
 <Icon name="star" />
 
+The macro buttons tab holds a row of one-tap buttons. Tap a button, the macro fires.
+
+![The macro buttons tab on the overview page](../../../../../assets/screenshots/overview_macro-buttons.png)
+
 The pencil icon next to the button row opens the **Edit Macro Buttons** modal.
+
+![The Edit Macro Buttons modal](../../../../../assets/screenshots/overview_edit-modal.png)
 
 <Steps>
 
@@ -23,4 +54,4 @@ The pencil icon next to the button row opens the **Edit Macro Buttons** modal.
 
 </Steps>
 
-Build the macros themselves on the [Macros](/products/sndwrks-local/software/macros) page first — anything you create there shows up in **available macros**.
+Build the macros themselves on the [Macros](/products/sndwrks-local/software/macros) page.

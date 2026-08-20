@@ -21,3 +21,11 @@ pnpm-debug.log*
 .DS_Store
 
 /.playwright-mcp
+
+# python (uv)
+.venv/
+__pycache__/
+
+# screenshot harness — saved session and failure dumps
+scripts/screenshots/.auth/
+scripts/screenshots/.debug/

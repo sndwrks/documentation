@@ -16,18 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v10.0.1
         with:
-          python-version: '3.12'
-
-      - name: Install dependencies
-        run: pip install -r scripts/requirements.txt
+          enable-cache: true
 
       - name: Generate llms.txt
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}
-        run: python scripts/generate_llms_txt.py
+        run: uv run --frozen --group llms scripts/generate_llms_txt.py
 
       - name: Open or update PR if changed
         env:

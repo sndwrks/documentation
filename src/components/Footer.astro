@@ -1,0 +1,63 @@
+---
+import EditLink from '@astrojs/starlight/components/EditLink.astro';
+import LastUpdated from '@astrojs/starlight/components/LastUpdated.astro';
+import Pagination from './Pagination.astro';
+---
+
+<footer class="sl-flex">
+	<div class="meta sl-flex">
+		<EditLink />
+		<LastUpdated />
+	</div>
+	<Pagination />
+</footer>
+
+<div class="sw-site-bar print:hidden">
+	<a href="https://sndwrks.com">sndwrks.com</a><span aria-hidden="true">-</span>
+	<a href="https://sndwrks.com/terms">terms</a><span aria-hidden="true">-</span>
+	<a href="https://sndwrks.com/privacy">privacy</a>
+</div>
+
+<style>
+	footer {
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.meta {
+		gap: 0.75rem 3rem;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+	}
+	.meta > :global(p:only-child) {
+		margin-inline-start: auto;
+	}
+
+	/* slim site bar: 1px top rule, right-aligned mono links joined by "-" */
+	.sw-site-bar {
+		position: fixed;
+		inset-inline: 0;
+		bottom: 0;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 0.75rem;
+		height: var(--sw-footer-height);
+		padding-inline: 1.5rem;
+		border-top: var(--border);
+		background-color: var(--color-bg);
+		font-family: var(--sl-font-system-mono);
+		font-size: var(--sl-text-2xs);
+		letter-spacing: 0.05em;
+		color: var(--color-muted);
+	}
+	.sw-site-bar a {
+		color: var(--color-muted);
+		text-decoration: none;
+	}
+	.sw-site-bar a:hover {
+		color: var(--color-accent-text);
+	}
+</style>

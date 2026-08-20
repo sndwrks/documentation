@@ -11,12 +11,16 @@ A **device** is anything the server talks to over the network: consoles, process
 
 Devices are the building blocks for everything else: routing, macros, and haze watch all reference them.
 
+![The devices page](../../../../../assets/screenshots/devices_list.png)
+
 We are consistently adding new device types, if there's something you want to control tell us! 
 
 ## Add a device
 <Icon name="star" />
 
 There's three ways to add devices: manually, via network scan, or by sending a message to the server. We will show the manual process here.
+
+sndwrks sensors are the exception — they add themselves and you approve them. See [Device Adoption](/products/sndwrks-local/software/device-adoption).
 
 
 
@@ -34,8 +38,9 @@ There's three ways to add devices: manually, via network scan, or by sending a m
 
 </Steps>
 
-    **New Device Page**
-    ![New device page showing device creation in progress](../../../../../assets/screenshots/new-device.png)
+**New Device Page**
+
+![New device page showing device creation in progress](../../../../../assets/screenshots/devices_new-device.png)
 
 ### Options
 <Icon name="star" />
@@ -65,6 +70,8 @@ This exposes the device in the router matrix allowing for message routing for th
 
 Selecting `Router` exposes some more options for a device.
 
+![The device editor with Router enabled, revealing transport and message type](../../../../../assets/screenshots/devices_editor-router-enabled.png)
+
 #### Direction
 <Icon name="star" />
 
@@ -90,17 +97,56 @@ This selects the message type you'd expect the device to send or receive. The se
 
 We like eager parsing because it allows us to lower the latency, which we think is important in live environments.
 
+#### Monitoring
+<Icon name="star" />
+
+There are four device monitoring options right now: **ARP**, **Ping**, **HTTP**, and **OSC**.
+
+![The device monitoring options](../../../../../assets/screenshots/devices_monitoring-options.png)
+
+**ARP**
+
+The ARP monitoring sends out arp requests to the target and then we check to see if it responded. This mode is useful if a network device doesn't respond to a ping.
+
+The ARP monitoring will show if the OS is up on the host machine.
+
+**Ping**
+
+The ping monitoring will send out an ICMP ping to the target. It will show as up when the ping is successful.
+
+Ping monitoring will show if the OS is up. Some network devices will not respond to ping messages.
+
+**HTTP**
+
+The http monitoring will send a request to the entered address, and then check the response to see if it is correct. 
+
+HTTP monitoring is useful when you want to check if an application is up not just the host machine.
+
+**OSC**
+
+The OSC monitoring is a ping/pong check. So, the server sends the first message then waits to see if there's a response that matches the configured address.
+
+OSC monitoring is helpful when you want to check if a specific application is not only up but is also receiving and sending OSC messages.
+
+#### VNC
+<Icon name="star" />
+
+If the device is a machine with a screen, you can turn on VNC here and open a remote desktop for it without leaving the app. The section holds the port, the stored credentials, and the button that opens a session.
+
+Full details on [Device VNC](/products/sndwrks-local/software/device-vnc).
+
 ## Deleting a device
 <Icon name="star" />
 
 You may not want a device to stay forever. Well, we have a unique solution to that: the Delete Button! Wow!
 
-Click on the `X` on the device item in the list and it will show a confirmation modal. Then confirm that and it's gone! As a note, we do NOT have undo so this is a permanent action. Give us a call if you need something restored.
+Open the device and click the delete icon; a confirmation appears at the bottom of the editor. Then confirm that and it's gone! As a note, we do NOT have undo so this is a permanent action. Give us a call if you need something restored.
+
+![Confirming deletion of a device](../../../../../assets/screenshots/devices_delete-confirm.png)
 
 ## Connection state
 <Icon name="star" />
 
-Each device card shows its live state: `disconnected`, `connecting`, or `connected`.
+Each device row shows its live state in the **Status** column: `disconnected`, `connecting`, or `connected`.
 
-As a note, this will only stay connected if the server can maintain a persistent connection to the device in question. UDP for example is inherently stateless, so it will never say connected or may momentarily say it's connected.
-
+This will only stay connected if the server can maintain a persistent connection to the device in question. UDP for example is inherently stateless, so it will never say connected or may momentarily say it's connected.

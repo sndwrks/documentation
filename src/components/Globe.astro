@@ -1,0 +1,124 @@
+---
+/**
+ * Dotted point-cloud globe, rendered on a 2D canvas — no dependencies.
+ * Front hemisphere only (back-facing dots are culled), slow Y-axis rotation.
+ * Layout-agnostic: the parent positions/sizes `.sw-globe`.
+ */
+---
+
+<div class="sw-globe" aria-hidden="true"><canvas></canvas></div>
+
+<style>
+	.sw-globe canvas {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+<script>
+	const wrap = document.querySelector('.sw-globe');
+	const canvas = wrap?.querySelector('canvas');
+	if (wrap && canvas) {
+		const ctx = canvas.getContext('2d');
+		const N = 1400;
+		const SPEED = 0.12; // rad/s
+
+		const ACCENT_RATE = 0.04; // sparse sndwrks-lime highlights
+
+		// Fibonacci sphere point distribution
+		const GA = Math.PI * (3 - Math.sqrt(5));
+		const pts = Array.from({ length: N }, (_, i) => {
+			const y = 1 - (i / (N - 1)) * 2;
+			const r = Math.sqrt(1 - y * y);
+			return {
+				x: Math.cos(GA * i) * r,
+				y,
+				z: Math.sin(GA * i) * r,
+				accent: Math.random() < ACCENT_RATE,
+			};
+		});
+
+		let w = 0, h = 0, cx = 0, cy = 0, R = 0;
+		let dotColor = '#9a8da3';
+		let accentColor = '#c2f280';
+
+		const readColors = () => {
+			const cs = getComputedStyle(document.documentElement);
+			dotColor = cs.getPropertyValue('--color-muted').trim() || dotColor;
+			accentColor = cs.getPropertyValue('--sw-globe-accent').trim() || accentColor;
+		};
+
+		const resize = () => {
+			const dpr = Math.min(devicePixelRatio || 1, 2);
+			const rect = wrap.getBoundingClientRect();
+			w = rect.width;
+			h = rect.height;
+			canvas.width = Math.round(w * dpr);
+			canvas.height = Math.round(h * dpr);
+			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			cx = w / 2;
+			cy = h / 2;
+			R = Math.min(w, h) / 2 - 4;
+		};
+
+		const draw = (tMs) => {
+			ctx.clearRect(0, 0, w, h);
+			const th = (tMs / 1000) * SPEED;
+			const c = Math.cos(th);
+			const s = Math.sin(th);
+			for (const p of pts) {
+				const z = p.z * c - p.x * s;
+				if (z <= 0) continue; // front hemisphere only — the globe reads as opaque
+				const x = p.x * c + p.z * s;
+				ctx.fillStyle = p.accent ? accentColor : dotColor;
+				ctx.globalAlpha = p.accent
+					? Math.max(0.5, 0.3 + 0.7 * z)
+					: 0.3 + 0.7 * z;
+				const r = (0.5 + 0.9 * z) * (R / 200) * (p.accent ? 1.4 : 1);
+				ctx.beginPath();
+				ctx.arc(cx + x * R, cy - p.y * R, r, 0, Math.PI * 2);
+				ctx.fill();
+			}
+			ctx.globalAlpha = 1;
+		};
+
+		// animate only when visible, on-screen, and motion is allowed
+		const rmq = matchMedia('(prefers-reduced-motion: reduce)');
+		let raf = 0;
+		let inView = true;
+		const loop = (t) => {
+			draw(t);
+			raf = requestAnimationFrame(loop);
+		};
+		const update = () => {
+			const animate = inView && !document.hidden && !rmq.matches;
+			if (animate && !raf) raf = requestAnimationFrame(loop);
+			if (!animate && raf) {
+				cancelAnimationFrame(raf);
+				raf = 0;
+				draw(0);
+			}
+		};
+
+		new IntersectionObserver(([e]) => {
+			inView = e.isIntersecting;
+			update();
+		}).observe(wrap);
+		document.addEventListener('visibilitychange', update);
+		rmq.addEventListener('change', update);
+		new ResizeObserver(() => {
+			resize();
+			if (!raf) draw(0);
+		}).observe(wrap);
+		new MutationObserver(() => {
+			readColors();
+			if (!raf) draw(0);
+		}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+		readColors();
+		resize();
+		update();
+		if (!raf) draw(0);
+	}
+</script>
