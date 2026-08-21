@@ -170,9 +170,9 @@ If a device is disabled, only OSC API commands from this device will work, every
 
 #### Ignore port
 
-Ignore port allows for incoming connections that send on multiple ports (like Qlab). Enabling this option will only check the IP address for a connection type and transport.
+Ignore port allows for incoming connections that send on multiple ports (like QLab). Enabling this option will only check the IP address for a connection type and transport.
 
-So, if you're sending Qlab on TCP, you'd enable this, but you could send in on UDP from that same IP and that would be a different device.
+So, if you're sending QLab on TCP, you'd enable this, but you could send in on UDP from that same IP and that would be a different device.
 
 #### Router
 
@@ -449,7 +449,7 @@ The message router sends messages from sources to destinations. This is selectab
 
 1. Click on the crosspoint you want to activate
 2. Check **Enabled**
-3. Optionally adjust the name and description. We autofill a name like `Qlab Backup In → HUD Out TCP`
+3. Optionally adjust the name and description. We autofill a name like `QLab Backup In → HUD Out TCP`
 4. Add filters if you want them.
 5. Press `⏎` to save, or `esc` to discard, or click the buttons there.
 
@@ -994,7 +994,7 @@ The ping message will automatically respond with a `/sndwrks/server/v1/pong` mes
 ```
 **Examples**
 
-This would start `server-pong` in Qlab. This could be a simple heartbeat, but don't forget to have a script to restart it if you panic! 
+This would start `server-pong` in QLab. This could be a simple heartbeat, but don't forget to have a script to restart it if you panic! 
 
 ```
 /sndwrks/server/v1/ping 53000 /cue/server-pong/start

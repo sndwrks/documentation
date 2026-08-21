@@ -40,3 +40,39 @@ jobs:
           aws cloudfront create-invalidation
           --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }}
           --paths "/*"
+
+  # The outcome card (.github/actions/discord-notify — the same action
+  # sndwrks-local and sndwrks-cloud use). This is the workflow that actually
+  # changes docs.sndwrks.com, so it reports success as well as failure.
+  #
+  # !cancelled() rather than always(): always() also fires on cancellation, and a
+  # superseded run should die silently rather than post a card nobody is waiting
+  # on. The ${{ }} wrapper is mandatory — a bare `!` is a reserved YAML tag
+  # indicator.
+  #
+  # The job-level permissions block REPLACES the workflow-level one, deliberately
+  # dropping id-token: write — this job talks to nothing but the GitHub API and
+  # the webhook, and has no business minting OIDC tokens.
+  notify-discord:
+    if: ${{ !cancelled() }}
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout the notify action
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Notify Discord
+        uses: ./.github/actions/discord-notify
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          needs-json: ${{ toJSON(needs) }}
